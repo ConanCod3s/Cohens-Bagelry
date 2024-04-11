@@ -18,4 +18,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+// Ignore this until we need it so we can deploy
+// @ts-ignore
 const analytics = getAnalytics(app);
