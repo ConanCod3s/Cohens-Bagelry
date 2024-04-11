@@ -1,5 +1,4 @@
 import Header from "./Components/Header.tsx";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography"
 import {useState} from "react";
@@ -16,20 +15,13 @@ export default function App() {
     return (
         <ThemeProvider theme={theme ? lightTheme : darkTheme}>
             <CssBaseline/>
-            <Box sx={{height: '100vh'}}>
-                <Header/>
-                <Container maxWidth={'xl'} sx={{display: 'flex', justifyContent: 'space-around', height: '100%'}}>
-                    <Typography variant={'h6'}>Cohen's Bagelry</Typography>
-                </Container>
-                <Box sx={{
-                    position: 'sticky',
-                    bottom: '0',
-                }}  >
-                    <IconButton onClick={() => swapTheme(!theme)}>
-                        {theme ? <LightModeIcon/> : <NightlightRoundIcon/>}
-                    </IconButton>
-                </Box>
-            </Box>
+            <Header/>
+            <Container sx={{display: 'flex', justifyContent: 'space-around'}}>
+                <Typography variant={'h6'}>Cohen's Bagelry</Typography>
+            </Container>
+            <IconButton onClick={() => swapTheme(!theme)} sx={{position: 'fixed', bottom: '0'}}>
+                {theme ? <LightModeIcon/> : <NightlightRoundIcon/>}
+            </IconButton>
         </ThemeProvider>
     )
 }
