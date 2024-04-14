@@ -8,6 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
 
 export default function App() {
     const [theme, swapTheme] = useState<boolean>(true);
@@ -16,12 +17,16 @@ export default function App() {
         <ThemeProvider theme={theme ? lightTheme : darkTheme}>
             <CssBaseline/>
             <Header/>
-            <Container sx={{display: 'flex', justifyContent: 'space-around'}}>
-                <Typography variant={'h6'}>Cohen's Bagelry</Typography>
+            <Container sx={{display: 'flex', justifyContent: 'space-around'}} maxWidth={'xl'}>
+                <Box sx={{backgroundColor: 'blue'}}>
+                    <Typography variant={'h6'}></Typography>
+
+                </Box>
+                <IconButton onClick={() => swapTheme(!theme)} sx={{position: 'fixed', bottom: '0'}}>
+                    {theme ? <LightModeIcon/> : <NightlightRoundIcon/>}
+                </IconButton>
             </Container>
-            <IconButton onClick={() => swapTheme(!theme)} sx={{position: 'fixed', bottom: '0'}}>
-                {theme ? <LightModeIcon/> : <NightlightRoundIcon/>}
-            </IconButton>
+
         </ThemeProvider>
     )
 }
