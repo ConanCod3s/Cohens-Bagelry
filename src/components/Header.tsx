@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 import { useNavigate } from "react-router-dom";
+import { Stack } from '@mui/material';
 
 /** Pages to add
  * 'Products', 'Pricing',
@@ -15,7 +16,6 @@ const pages = ['Place Order', 'Contact', 'About'];
 
 function Header() {
     const navigate = useNavigate();
-
 
     return (
         <AppBar position="static">
@@ -28,20 +28,33 @@ function Header() {
                         }}
                         onClick={() => navigate('/')}
                     >
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="a"
-                            sx={{
-                                mr: 2,
-                                display: { xs: 'none', md: 'flex' },
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'inherit',
-                                textDecoration: 'none',
-                            }} > Cohen's Bagelry
-                        </Typography>
+                        <Stack>
+                            <Typography
+                                variant="h6"
+                                noWrap
+                                sx={{
+                                    mr: 2,
+                                    display: { xs: 'none', md: 'flex' },
+                                    fontFamily: 'monospace',
+                                    fontWeight: 700,
+                                    letterSpacing: '.3rem',
+                                    color: 'inherit',
+                                    textDecoration: 'none',
+                                }} > Cohen's Bagelry
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                noWrap
+                                sx={{
+                                    mr: 2,
+                                    display: { xs: 'none', md: 'flex' },
+                                    fontFamily: 'monospace',
+                                    letterSpacing: '.3rem',
+                                    color: 'inherit',
+                                    textDecoration: 'none',
+                                }} > "That Bagel Place"
+                            </Typography>
+                        </Stack>
                     </Button>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
