@@ -1,13 +1,13 @@
-import * as React from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import { getURL, getAppImages, appImages } from '../constants/firebase/Calls';
 
 export default function SimpleFade() {
-    const [img, setImg] = React.useState<any>(null);
-    const [activeIndex, setActiveIndex] = React.useState(0);
+    const [img, setImg] = useState<any>(null);
+    const [activeIndex, setActiveIndex] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const getData = async () => {
             await getURL(
                 "gs://cohens-bagelry-8c701.appspot.com/Step_1.png"
@@ -20,7 +20,7 @@ export default function SimpleFade() {
         getData();
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setInterval(() => {
             setActiveIndex((current) =>
                 current === appImages.length - 1 ? 0 : current + 1
@@ -46,7 +46,7 @@ export default function SimpleFade() {
         );
     else
         return (
-            <React.Fragment>
+            <Fragment>
                 {appImages.map((image, index) => (
                     <Fade
                         key={`${image}-${index}`}
@@ -68,6 +68,6 @@ export default function SimpleFade() {
                         />
                     </Fade>
                 ))}
-            </React.Fragment>
+            </Fragment>
         );
 }
