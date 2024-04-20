@@ -64,7 +64,8 @@ export async function getURL(imgPath: string) {
             downloadedItem = url;
             return;
         })
-        .catch((error) => {
+        .catch((error: object) => {
+            console.error('getURL: ', error)
             return "";
         });
     return downloadedItem;

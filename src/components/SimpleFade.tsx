@@ -4,14 +4,8 @@ import Fade from '@mui/material/Fade';
 import { getURL, getAppImages, appImages } from '../constants/firebase/Calls';
 
 export default function SimpleFade() {
-    const [checked, setChecked] = React.useState(false);
-
-    const [img, setImg] = React.useState(null);
+    const [img, setImg] = React.useState<any>(null);
     const [activeIndex, setActiveIndex] = React.useState(0);
-
-    const handleChange = () => {
-        setChecked((prev) => !prev);
-    };
 
     React.useEffect(() => {
         const getData = async () => {
@@ -38,6 +32,7 @@ export default function SimpleFade() {
     if (appImages.length === 0)
         return (
             <Box
+                src={img}
                 component="img"
                 sx={(theme) => ({
                     paddingTop: 5,
