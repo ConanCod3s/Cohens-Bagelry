@@ -10,9 +10,8 @@ export default function SimpleFade() {
     useEffect(() => {
         const getData = async () => {
             await getURL(
-                "gs://cohens-bagelry-8c701.appspot.com/Step_1.png"
+                "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg"
             ).then((res: any) => {
-                console.log(res);
                 setImg(res);
             });
             if (appImages.length === 0) await getAppImages();
@@ -35,9 +34,8 @@ export default function SimpleFade() {
                 src={img}
                 component="img"
                 sx={(theme) => ({
-                    paddingTop: 5,
-                    height: "100%",
-                    maxWidth: "100%",
+                    height: '60vh',
+                    maxWidth: '80vw',
                     borderRadius: "10px",
                     boxShadow: `0px 0px 5px 1px black`,
                     border: `1px solid ${theme.palette.primary.main}`,
@@ -57,9 +55,8 @@ export default function SimpleFade() {
                             src={appImages[index]}
                             component="img"
                             sx={(theme) => ({
-                                paddingTop: 5,
-                                height: "100%",
-                                maxWidth: "100%",
+                                height: '60vh',
+                                maxWidth: '80vw',
                                 borderRadius: "10px",
                                 boxShadow: `0px 0px 5px 1px black`,
                                 border: `1px solid ${theme.palette.primary.main}`,

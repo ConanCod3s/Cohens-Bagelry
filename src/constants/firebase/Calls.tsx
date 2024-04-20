@@ -35,22 +35,22 @@ export const appImages: any[] = [];
 
 export const getAppImages = async () => {
     const imgs = [
-        "gs://cohens-bagelry-8c701.appspot.com/Step_1.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_2.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_3.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_4.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_5.1.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_5.2.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_6.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_7.1.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_7.2.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_8.1.png",
-        "gs://cohens-bagelry-8c701.appspot.com/Step_8.2.png",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_2.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_3.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_4.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_5.1.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_5.2.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_6.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_7.1.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_7.2.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_8.1.jpg",
+        "gs://cohens-bagelry-8c701.appspot.com/Step_8.2.jpg",
     ];
 
     const promises = imgs.map((img) => getURL(img));
     const results: any = await Promise.all(promises);
-    appImages.push(results);
+    appImages.push(...results);
 
 }
 

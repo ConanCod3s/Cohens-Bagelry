@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import { Home, LightMode, NightlightRound } from "@mui/icons-material";
+import Contact from "../pages/Contact";
 
 
 export default function Footer({ swapTheme, theme }: any) {
@@ -20,6 +21,7 @@ export default function Footer({ swapTheme, theme }: any) {
             <IconButton onClick={() => navigate("/")}  >
                 {<Home />}
             </IconButton>
+            <Contact />
             <IconButton onClick={() => swapTheme(!theme)} >
                 {theme ? <LightMode /> : <NightlightRound />}
             </IconButton>
