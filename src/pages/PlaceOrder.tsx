@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Email from '../components/forms/Email';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Typography, Box, Grid, Card } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
 
 
@@ -56,57 +56,60 @@ export default function PlaceOrder() {
     const totalQuantity = availableTypes.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
 
     return (
-        <Box
-            component="form"
-            sx={{
-                padding: 2,
-                '& .MuiTextField-root': { m: 1 },
-            }}
-            noValidate
-            autoComplete="off"
-        >
-            <Stack direction={'row'}>
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="First Name"
-                    defaultValue=""
-                />
-                <TextField
-                    id="outlined-disabled"
-                    label="Last Name"
-                    defaultValue=""
-                />
-            </Stack>
-            <Stack sx={{ paddingBottom: 5 }}>
-                <Box component={Email} />
-                <Box component={PhoneNumber} />
-            </Stack>
-            <Typography variant='subtitle1'>At this time we can only support orders below two dozen;</Typography>
-            <Box sx={{ height: 50 }} />
-            {availableTypes.map((type, sakuin) => {
-                return (
-                    <Stack
-                        key={type.label + sakuin}
-                        direction={'row'}
-                        sx={{ width: '100%', justifyContent: 'space-between' }}
-                    >
-                        <Typography>{type.label}</Typography>
-                        <Box
-                            component={Quantity}
-                            type={type}
-                            sakuin={sakuin}
-                            availableTypes={availableTypes}
-                            setAvailableTypes={setAvailableTypes}
+        <Grid container>
+            <Grid item sm={10} md={10} lg={10}>
+                <Box
+                    component="form"
+                    sx={{
+                        padding: 5,
+                        '& .MuiTextField-root': { m: 1 },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
+                    <Stack direction={'row'}>
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="First Name"
+                            defaultValue=""
+                        />
+                        <TextField
+                            id="outlined-disabled"
+                            label="Last Name"
+                            defaultValue=""
                         />
                     </Stack>
-                )
-            })}
-            <Box sx={{ height: 50 }} />
-            <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
-                <Typography>Cost: </Typography>
-                <Typography>$ {totalQuantity}.00</Typography>
-            </Stack>
-        </Box>
+                    <Stack sx={{ paddingBottom: 5 }}>
+                        <Box component={Email} />
+                        <Box component={PhoneNumber} />
+                    </Stack>
+                    <Typography variant='subtitle1'>At this time we can only support orders below two dozen;</Typography>
+                    <Box sx={{ height: 50 }} />
+                    {availableTypes.map((type, sakuin) => {
+                        return (
+                            <Stack
+                                key={type.label + sakuin}
+                                direction={'row'}
+                                sx={{ width: '100%', justifyContent: 'space-between' }}
+                            >
+                                <Typography>{type.label}</Typography>
+                                <Box
+                                    component={Quantity}
+                                    type={type}
+                                    sakuin={sakuin}
+                                    availableTypes={availableTypes}
+                                    setAvailableTypes={setAvailableTypes}
+                                />
+                            </Stack>
+                        )
+                    })}
+
+                </Box>
+            </Grid>
+            <Grid item component={Card} sx={{ justifyContent: 'space-between', alignContent: 'center', height: '10%', padding: 2 }}>
+                <Typography>${totalQuantity}.00</Typography>
+            </Grid>
+        </Grid >
     );
 }

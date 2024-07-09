@@ -3,6 +3,9 @@ import App from "../App";
 import PlaceOrder from "../pages/PlaceOrder";
 import Contact from "../pages/Contact";
 import Home from "../pages/Home";
+import About from '../pages/About';
+
+
 
 const router = createBrowserRouter([
     {
@@ -17,9 +20,13 @@ const router = createBrowserRouter([
                 path: "/PlaceOrder",
                 element: <PlaceOrder />,
             },
+            // {
+            //     path: "/Contact",
+            //     element: <Contact />,
+            // },
             {
-                path: "/Contact",
-                element: <Contact />,
+                path: "/About",
+                element: <About />,
             },
         ],
         errorElement: <App />

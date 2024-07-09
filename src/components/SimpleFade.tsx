@@ -40,8 +40,7 @@ export default function SimpleFade() {
                     boxShadow: `0px 0px 5px 1px black`,
                     border: `1px solid ${theme.palette.primary.main}`,
                 })}
-            />
-        );
+            />);
     else
         return (
             <Fragment>

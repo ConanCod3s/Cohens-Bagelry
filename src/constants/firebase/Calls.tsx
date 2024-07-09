@@ -31,10 +31,10 @@ export const events = [];
 export const athletes = [];
 export const downloadedItems = [];
 
-export const appImages: any[] = [];
+export let appImages: any[] = [];
 
 export const getAppImages = async () => {
-    const imgs = [
+    const promises = [
         "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_2.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_3.jpg",
@@ -46,12 +46,11 @@ export const getAppImages = async () => {
         "gs://cohens-bagelry-8c701.appspot.com/Step_7.2.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_8.1.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_8.2.jpg",
-    ];
+    ].map((url) => getURL(url));
 
-    const promises = imgs.map((img) => getURL(img));
     const results: any = await Promise.all(promises);
-    appImages.push(...results);
 
+    appImages = results;
 }
 
 export async function getURL(imgPath: string) {

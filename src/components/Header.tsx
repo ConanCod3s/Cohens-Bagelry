@@ -12,13 +12,13 @@ import { Stack } from '@mui/material';
  * 'Products', 'Pricing',
  */
 
-const pages = ['Place Order', 'Contact', 'About'];
+const pages = ['Place Order', 'About'];
 
 function Header() {
     const navigate = useNavigate();
 
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <BakeryDiningIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, transform: `rotate(-${Math.floor(Math.random() * 361)}deg)` }} />

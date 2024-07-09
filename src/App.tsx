@@ -9,16 +9,16 @@ import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer.tsx";
 
 export default function App() {
-    const [theme, swapTheme] = useState<boolean>(true);
+    const [themeMode, swapTheme] = useState<boolean>(true);
 
     return (
-        <ThemeProvider theme={theme ? lightTheme : darkTheme}>
+        <ThemeProvider theme={themeMode ? lightTheme : darkTheme}>
             <CssBaseline />
             <Header />
-            <Container sx={{ display: 'flex', justifyContent: 'space-around' }} maxWidth={'xl'}>
+            <Container sx={{ display: 'flex', justifyContent: 'space-around', padding: 2 }} maxWidth={'xl'}>
                 <Outlet />
             </Container>
-            <Footer theme={theme} swapTheme={swapTheme} />
+            <Footer themeMode={themeMode} swapTheme={swapTheme} />
         </ThemeProvider>
     )
 }
