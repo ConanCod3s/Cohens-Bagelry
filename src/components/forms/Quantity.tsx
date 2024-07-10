@@ -52,7 +52,7 @@ export default function Quantity({ availableTypes, setAvailableTypes, type, saku
                     setError(null);
                 }
             }}
-
+            sx={{ zIndex: 0 }}
             InputLabelProps={{ shrink: true }}
             value={type.quantity}
         />

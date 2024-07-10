@@ -4,7 +4,8 @@ import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
 import { Stack, Typography, Box, Grid, Card } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
-
+import Submit from '../components/forms/Submit';
+import LoginButton from '../components/login/LoginWithEmail';
 
 interface AvailableTypes {
     value: string,
@@ -47,13 +48,19 @@ const typesArr: AvailableTypes[] = [
 
 export default function PlaceOrder() {
 
-    const [availableTypes, setAvailableTypes] = useState<{
+    const [selections, setSelections] = useState<{
         value: string,
         label: string,
         quantity: number
     }[]>(typesArr);
 
-    const totalQuantity = availableTypes.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [phoneNumber, setPhoneNumber] = useState<string>('');
+
+
+    const totalQuantity = selections.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
 
     return (
         <Grid container>
@@ -61,7 +68,7 @@ export default function PlaceOrder() {
                 <Box
                     component="form"
                     sx={{
-                        padding: 5,
+                        padding: 2,
                         '& .MuiTextField-root': { m: 1 },
                     }}
                     noValidate
@@ -73,20 +80,22 @@ export default function PlaceOrder() {
                             id="outlined-required"
                             label="First Name"
                             defaultValue=""
+                            onChange={(event) => { setFirstName(event.target.value) }}
                         />
                         <TextField
                             id="outlined-disabled"
                             label="Last Name"
                             defaultValue=""
+                            onChange={(event) => { setLastName(event.target.value) }}
                         />
                     </Stack>
                     <Stack sx={{ paddingBottom: 5 }}>
-                        <Box component={Email} />
-                        <Box component={PhoneNumber} />
+                        <Email setEmail={setEmail} />
+                        <PhoneNumber setPhoneNumber={setPhoneNumber} />
                     </Stack>
                     <Typography variant='subtitle1'>At this time we can only support orders below two dozen;</Typography>
                     <Box sx={{ height: 50 }} />
-                    {availableTypes.map((type, sakuin) => {
+                    {selections.map((type, sakuin) => {
                         return (
                             <Stack
                                 key={type.label + sakuin}
@@ -98,18 +107,32 @@ export default function PlaceOrder() {
                                     component={Quantity}
                                     type={type}
                                     sakuin={sakuin}
-                                    availableTypes={availableTypes}
-                                    setAvailableTypes={setAvailableTypes}
+                                    availableTypes={selections}
+                                    setAvailableTypes={setSelections}
                                 />
                             </Stack>
                         )
                     })}
+                    <Box sx={{ height: 50 }} />
+                    <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
+                        <Typography>Cost: </Typography>
+                        <Typography>$ {totalQuantity}.00</Typography>
+                    </Stack>
+                    <Stack direction='row' sx={{ justifyContent: 'end' }}>
 
+                    </Stack>
                 </Box>
             </Grid>
-            <Grid item component={Card} sx={{ justifyContent: 'space-between', alignContent: 'center', height: '10%', padding: 2 }}>
-                <Typography>${totalQuantity}.00</Typography>
+            <Grid item sx={{ alignContent: 'space-around', padding: 2 }} sm={2} md={2} lg={2}>
+                {/* <LoginButton /> */}
+                <Submit
+                    selections={selections.filter((obj) => obj.quantity > 0)}
+                    email={email}
+                    phoneNumber={phoneNumber}
+                    firstName={firstName}
+                    lastName={lastName}
+                />
             </Grid>
-        </Grid >
+        </Grid>
     );
 }

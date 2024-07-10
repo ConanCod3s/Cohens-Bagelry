@@ -16,6 +16,18 @@
     </script>
     <!-- End Google Tag Manager -->
 
+    <script>
+      function onClick(e) {
+        e.preventDefault();
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute(
+            "6LclRQoqAAAAAJMAtg1AQJVk1MlP6jdTyt4peTnD",
+            { action: "LOGIN" }
+          );
+        });
+      }
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

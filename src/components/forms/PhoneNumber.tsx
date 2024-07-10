@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
-export default function PhoneNumber() {
+interface Props {
+    setPhoneNumber: (email: string) => void
+}
+
+export default function PhoneNumber({ setPhoneNumber }: Props) {
     const [error, setError] = useState<{
         key: string,
         msg: string,
@@ -23,8 +27,10 @@ export default function PhoneNumber() {
             onChange={(event) => {
                 const phoneNumber = event.target.value;
                 if (!validatePhoneNumber(phoneNumber)) {
+                    setPhoneNumber('')
                     setError({ key: 'phone', msg: 'Please enter a valid phone number (e.g. 123-456-7890)' });
                 } else {
+                    setPhoneNumber(phoneNumber)
                     setError(null);
                 }
             }}
