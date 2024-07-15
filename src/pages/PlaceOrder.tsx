@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
-import { Stack, Typography, Box, Switch } from '@mui/material';
+import { Stack, Typography, Box, Switch, Grid } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
 import Submit from '../components/forms/Submit';
 import LoginWithEmail from '../components/login/LoginWithEmail';
@@ -79,56 +79,62 @@ export default function PlaceOrder() {
     }, []);
 
     return (
-        <Box
+        <Grid
+            container
+            direction={'column'}
             component="form"
             sx={{
-                padding: 2,
+                padding: 5,
+                height: '92vh',
                 '& .MuiTextField-root': { m: 1 },
             }}
             noValidate
             autoComplete="off"
         >
-            <Stack direction={'row'} sx={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                <Typography>Login</Typography>
-                <Switch checked={loginSignup} onChange={() => swapLoginSignup(!loginSignup)} />
-                <Typography>Sign Up</Typography>
-            </Stack>
+            <Grid item sx={{ alignSelf: 'center' }}>
+                <Stack direction={'row'} sx={{ justifyContent: 'center', alignItems: 'center' }} >
+                    <Typography>Login</Typography>
+                    <Switch checked={loginSignup} onChange={() => swapLoginSignup(!loginSignup)} />
+                    <Typography>Sign Up</Typography>
+                </Stack>
 
-            {loggedIn ?
-                <Submit
-                    selections={selections.filter((obj) => obj.quantity > 0)}
-                    email={email}
-                    phoneNumber={phoneNumber}
-                    firstName={firstName}
-                    lastName={lastName}
-                /> : loginSignup ?
-                    <Stack >
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="First Name"
-                            defaultValue=""
-                            onChange={(event) => { setFirstName(event.target.value) }}
-                        />
-                        <TextField
-                            id="outlined-disabled"
-                            label="Last Name"
-                            defaultValue=""
-                            onChange={(event) => { setLastName(event.target.value) }}
-                        />
-                        <PhoneNumber setPhoneNumber={setPhoneNumber} />
-                        <SignUpWithEmail
+                {loggedIn ?
+                    <Submit
+                        selections={selections.filter((obj) => obj.quantity > 0)}
+                        email={email}
+                        phoneNumber={phoneNumber}
+                        firstName={firstName}
+                        lastName={lastName}
+                    /> : loginSignup ?
+                        <Stack >
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="First Name"
+                                defaultValue=""
+                                onChange={(event) => { setFirstName(event.target.value) }}
+                            />
+                            <TextField
+                                id="outlined-disabled"
+                                label="Last Name"
+                                defaultValue=""
+                                onChange={(event) => { setLastName(event.target.value) }}
+                            />
+                            <PhoneNumber setPhoneNumber={setPhoneNumber} />
+                            <SignUpWithEmail
+                                email={email}
+                                setEmail={setEmail}
+                            />
+                        </Stack> :
+                        <LoginWithEmail
                             email={email}
                             setEmail={setEmail}
                         />
-                    </Stack> :
-                    <LoginWithEmail
-                        email={email}
-                        setEmail={setEmail}
-                    />
-            }
-            <Typography variant='subtitle1'>At this time we can only support orders below one dozen;</Typography>
-            <Box sx={{ height: '100%', paddingTop: 4, paddingBottom: 8 }}>
+                }
+
+            </Grid>
+            {/* <Typography variant='subtitle1'>At this time we can only support orders below one dozen;</Typography> */}
+            <Grid item>
                 {selections.map((type, sakuin) => {
                     return (
                         <Stack
@@ -147,11 +153,11 @@ export default function PlaceOrder() {
                         </Stack>
                     )
                 })}
-            </Box>
-            <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
-                <Typography>Cost: </Typography>
-                <Typography>$ {totalQuantity}.00</Typography>
-            </Stack>
-        </Box>
+                <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
+                    <Typography>Cost: </Typography>
+                    <Typography>$ {totalQuantity}.00</Typography>
+                </Stack>
+            </Grid>
+        </Grid>
     );
 }

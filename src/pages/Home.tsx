@@ -7,7 +7,6 @@ import { workingWindow } from "../theme/Base.tsx";
 
 export default function App() {
 
-    console.log(workingWindow);
     return (
         <Grid container sx={{ display: 'flex', justifyContent: 'space-around', paddingTop: 1, height: workingWindow, overflow: "hidden" }}>
             <Grid item sm={4} md={4} lg={4} sx={{ overflow: 'auto', height: '100%' }}>
