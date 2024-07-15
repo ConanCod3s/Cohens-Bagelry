@@ -8,7 +8,6 @@ export default function Pictures() {
 
     const [isLoading, setLoading] = useState<boolean>(true);
 
-
     useEffect(() => {
         const getData = async () => {
             await getAppImages().then(() => {

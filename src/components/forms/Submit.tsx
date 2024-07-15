@@ -20,7 +20,6 @@ interface Props {
 
 export default function Submit(props: Props) {
     const { enqueueSnackbar } = useSnackbar();
-    const [error, isError] = useState<boolean>(false);
     const [submitting, isSubmitting] = useState<boolean>(false);
 
     const totalQuantity = props.selections.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
@@ -29,17 +28,13 @@ export default function Submit(props: Props) {
     function validateProps() {
         if (props.firstName.length === 0) {
             enqueueSnackbar('Please add a First name', { variant: 'error' });
-            isError(true);
         } else if (props.email.length === 0) {
             enqueueSnackbar('Email Is Missing, please add a valid email', { variant: 'error' });
-            isError(true);
         } else if (props.phoneNumber.length === 0) {
             enqueueSnackbar('An invalid, incomplete, or no phone number was added', { variant: 'warning' });
         } else if (totalQuantity <= 0) {
             enqueueSnackbar('Please select a quantity over 0', { variant: 'error' });
-            isError(true);
         } else {
-            isError(false);
             handleAuthenticationAndOrder();
         }
     }

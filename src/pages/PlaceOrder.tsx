@@ -53,7 +53,6 @@ const typesArr: AvailableTypes[] = [
 
 export default function PlaceOrder() {
 
-    const [loading, setLoading] = useState<boolean>(false);
     const [loginSignup, swapLoginSignup] = useState<boolean>(false);
 
     const [selections, setSelections] = useState<{
@@ -121,13 +120,11 @@ export default function PlaceOrder() {
                         <SignUpWithEmail
                             email={email}
                             setEmail={setEmail}
-                            setLoading={setLoading}
                         />
                     </Stack> :
                     <LoginWithEmail
                         email={email}
                         setEmail={setEmail}
-                        setLoading={setLoading}
                     />
             }
             <Typography variant='subtitle1'>At this time we can only support orders below one dozen;</Typography>
