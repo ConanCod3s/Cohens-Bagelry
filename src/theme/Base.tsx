@@ -1,9 +1,9 @@
 import { createTheme } from "@mui/material";
 
 // Buffers for static components, all in vh
-export const header:number = 8;
-export const footer: number = 4;
-export const workingWindow: number = 100 - (header + footer);
+export const header: number = 80;
+export const footer: number = 40;
+export const workingWindow: number = window.innerHeight - (header + footer);
 
 const componentOverrides = {
     MuiTypography: {

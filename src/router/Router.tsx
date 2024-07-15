@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import PlaceOrder from "../pages/PlaceOrder";
-import Contact from "../pages/Contact";
+// import Contact from "../pages/Contact";
 import Home from "../pages/Home";
 import About from '../pages/About';
-
-
+import Pictures from "../pages/Pictures";
+import PageNotFound from "../pages/404";
 
 const router = createBrowserRouter([
     {
@@ -28,11 +28,13 @@ const router = createBrowserRouter([
                 path: "/About",
                 element: <About />,
             },
+            {
+                path: "/Pictures",
+                element: <Pictures />,
+            },
         ],
-        errorElement: <App />
+        errorElement: <PageNotFound />
     },
 ]);
-
-
 
 export default router

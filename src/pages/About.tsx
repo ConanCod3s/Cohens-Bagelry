@@ -1,10 +1,10 @@
 import { Box, Typography } from "@mui/material";
 
-export default function Contact() {
+export default function About() {
 
 
     return (
-        <Box sx={{ justifyContent: 'space-around', textAlign: 'center', width: '50%', paddingTop: 5 }} >
+        <Box sx={{ justifyContent: 'space-around', textAlign: 'center', paddingTop: 5 }} >
             <Typography variant="h4"> Our Story: From Code to Crust </Typography>
             <Box sx={{ height: 25, width: '100%' }} />
             <Typography >

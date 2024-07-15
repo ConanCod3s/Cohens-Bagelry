@@ -3,18 +3,18 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Stack, TextField } from '@mui/material';
 import Email from '../forms/Email';
 import { auth } from '../../constants/firebase/Calls';
+
 import { useSnackbar } from 'notistack';
 
-
-export default function LoginWithEmail({ email, setEmail }: any) {
-    const [password, setPassword] = useState('');
+export default function SignUpWithEmail({ email, setEmail }: any) {
     const { enqueueSnackbar } = useSnackbar();
+    const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleSignUp = () => {
         try {
             createUserWithEmailAndPassword(auth, email, password)
                 .then(() => {
-                    enqueueSnackbar('Logged In', { variant: 'success' });
+                    enqueueSnackbar('Account Created!', { variant: 'success' });
                 })
                 .catch((error: any) => {
                     enqueueSnackbar(error.message, { variant: 'error' });
@@ -32,7 +32,7 @@ export default function LoginWithEmail({ email, setEmail }: any) {
                 defaultValue=""
                 onChange={(event) => setPassword(event.target.value)}
             />
-            <Button onClick={handleLogin}>Submit</Button>
+            <Button onClick={handleSignUp}>Submit</Button>
         </Stack>
 
     )

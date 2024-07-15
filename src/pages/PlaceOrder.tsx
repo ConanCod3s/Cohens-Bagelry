@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import Email from '../components/forms/Email';
+
+
+import { Fragment, useEffect, useState } from 'react';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
-import { Stack, Typography, Box, Grid, Card } from '@mui/material';
+import { Stack, Typography, Box, Grid, Card, CircularProgress, Button, Switch, FormGroup, FormControlLabel } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
 import Submit from '../components/forms/Submit';
-import LoginButton from '../components/login/LoginWithEmail';
+import LoginWithEmail from '../components/login/LoginWithEmail';
+
+import { auth } from '../constants/firebase/Calls.tsx';
+import { onAuthStateChanged } from "firebase/auth";
+import SignUpWithEmail from '../components/signUp/SignUpWithEmail.tsx';
 
 interface AvailableTypes {
     value: string,
@@ -48,6 +53,9 @@ const typesArr: AvailableTypes[] = [
 
 export default function PlaceOrder() {
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [loginSignup, swapLoginSignup] = useState<boolean>(false);
+
     const [selections, setSelections] = useState<{
         value: string,
         label: string,
@@ -58,23 +66,44 @@ export default function PlaceOrder() {
     const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
-
+    const [loggedIn, setLogin] = useState<boolean>(false);
 
     const totalQuantity = selections.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) setLogin(true)
+            else setLogin(false)
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     return (
-        <Grid container>
-            <Grid item sm={10} md={10} lg={10}>
-                <Box
-                    component="form"
-                    sx={{
-                        padding: 2,
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <Stack direction={'row'}>
+        <Box
+            component="form"
+            sx={{
+                padding: 2,
+                '& .MuiTextField-root': { m: 1 },
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            <Stack direction={'row'} sx={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                <Typography>Login</Typography>
+                <Switch checked={loginSignup} onChange={() => swapLoginSignup(!loginSignup)} />
+                <Typography>Sign Up</Typography>
+            </Stack>
+
+            {loggedIn ?
+                <Submit
+                    selections={selections.filter((obj) => obj.quantity > 0)}
+                    email={email}
+                    phoneNumber={phoneNumber}
+                    firstName={firstName}
+                    lastName={lastName}
+                /> : loginSignup ?
+                    <Stack >
                         <TextField
                             required
                             id="outlined-required"
@@ -88,51 +117,44 @@ export default function PlaceOrder() {
                             defaultValue=""
                             onChange={(event) => { setLastName(event.target.value) }}
                         />
-                    </Stack>
-                    <Stack sx={{ paddingBottom: 5 }}>
-                        <Email setEmail={setEmail} />
                         <PhoneNumber setPhoneNumber={setPhoneNumber} />
-                    </Stack>
-                    <Typography variant='subtitle1'>At this time we can only support orders below two dozen;</Typography>
-                    <Box sx={{ height: 50 }} />
-                    {selections.map((type, sakuin) => {
-                        return (
-                            <Stack
-                                key={type.label + sakuin}
-                                direction={'row'}
-                                sx={{ width: '100%', justifyContent: 'space-between' }}
-                            >
-                                <Typography>{type.label}</Typography>
-                                <Box
-                                    component={Quantity}
-                                    type={type}
-                                    sakuin={sakuin}
-                                    availableTypes={selections}
-                                    setAvailableTypes={setSelections}
-                                />
-                            </Stack>
-                        )
-                    })}
-                    <Box sx={{ height: 50 }} />
-                    <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
-                        <Typography>Cost: </Typography>
-                        <Typography>$ {totalQuantity}.00</Typography>
-                    </Stack>
-                    <Stack direction='row' sx={{ justifyContent: 'end' }}>
-
-                    </Stack>
-                </Box>
-            </Grid>
-            <Grid item sx={{ alignContent: 'space-around', padding: 2 }} sm={2} md={2} lg={2}>
-                {/* <LoginButton /> */}
-                <Submit
-                    selections={selections.filter((obj) => obj.quantity > 0)}
-                    email={email}
-                    phoneNumber={phoneNumber}
-                    firstName={firstName}
-                    lastName={lastName}
-                />
-            </Grid>
-        </Grid>
+                        <SignUpWithEmail
+                            email={email}
+                            setEmail={setEmail}
+                            setLoading={setLoading}
+                        />
+                    </Stack> :
+                    <LoginWithEmail
+                        email={email}
+                        setEmail={setEmail}
+                        setLoading={setLoading}
+                    />
+            }
+            <Typography variant='subtitle1'>At this time we can only support orders below one dozen;</Typography>
+            <Box sx={{ height: '100%', paddingTop: 4, paddingBottom: 8 }}>
+                {selections.map((type, sakuin) => {
+                    return (
+                        <Stack
+                            key={type.label + sakuin}
+                            direction={'row'}
+                            sx={{ width: '100%', justifyContent: 'space-between' }}
+                        >
+                            <Typography>{type.label}</Typography>
+                            <Box
+                                component={Quantity}
+                                type={type}
+                                sakuin={sakuin}
+                                availableTypes={selections}
+                                setAvailableTypes={setSelections}
+                            />
+                        </Stack>
+                    )
+                })}
+            </Box>
+            <Stack direction='row' sx={{ justifyContent: 'space-between', borderTop: '1px dashed black' }}>
+                <Typography>Cost: </Typography>
+                <Typography>$ {totalQuantity}.00</Typography>
+            </Stack>
+        </Box>
     );
 }

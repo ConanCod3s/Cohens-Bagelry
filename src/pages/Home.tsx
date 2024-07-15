@@ -1,38 +1,23 @@
-import { Card, CardMedia, CircularProgress, Stack } from "@mui/material";
+// import About from "../pages/About.tsx";
+import PlaceOrder from "../pages/PlaceOrder.tsx";
 
-import { useEffect, useState } from 'react';
-import { appImages, getAppImages } from '../constants/firebase/Calls';
+import { Grid } from "@mui/material";
+import Pictures from "./Pictures.tsx";
+import { workingWindow } from "../theme/Base.tsx";
 
+export default function App() {
 
-export default function Home() {
-
-    const [isLoading, setLoading] = useState<boolean>(true);
-
-
-    useEffect(() => {
-        const getData = async () => {
-            await getAppImages().then(() => {
-                setLoading(!isLoading);
-            });
-        };
-        if (appImages.length === 0)
-            getData();
-    }, []);
-
-    if (isLoading && appImages.length === 0) return <CircularProgress />
-
+    console.log(workingWindow);
     return (
-        <Stack spacing={.5}>
-            {appImages.map((image: any, idx: number) => (
-                <Card sx={{ display: 'flex' }}>
-                    <CardMedia
-                        key={idx}
-                        image={image}
-                        component="img"
-                        sx={{ width: '25vw' }}
-                    />
-                </Card>))}
-        </Stack>
+        <Grid container sx={{ display: 'flex', justifyContent: 'space-around', paddingTop: 1, height: workingWindow, overflow: "hidden" }}>
+            <Grid item sm={4} md={4} lg={4} sx={{ overflow: 'auto', height: '100%' }}>
+                <Pictures />
+            </Grid>
 
+            <Grid item sm={8} md={8} lg={8} sx={{ overflow: 'auto', height: '100%' }}>
+                <PlaceOrder />
+            </Grid>
+
+        </Grid>
     )
 }

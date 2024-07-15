@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import { BottomNavigation, Tooltip } from "@mui/material";
 import { Home, LightMode, NightlightRound, Email } from "@mui/icons-material";
+import { footer } from "../theme/Base";
 
 
 export default function Footer({ swapTheme, themeMode }: any) {
@@ -11,7 +12,7 @@ export default function Footer({ swapTheme, themeMode }: any) {
     return (
         <BottomNavigation
             sx={{
-                height: 40,
+                height: footer,
                 bottom: '0',
                 width: '100%',
                 position: 'fixed',
