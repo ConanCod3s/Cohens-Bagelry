@@ -4,10 +4,9 @@ import { app } from "./Config";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
 import { getFirestore, collection, setDoc, doc } from "firebase/firestore";
-import { useSnackbar } from "notistack";
 
 // Initialize Cloud Firestore and get a reference to the service
 const auth = getAuth(app);
@@ -32,22 +31,6 @@ export const athletes = [];
 export const downloadedItems = [];
 
 export let appImages: any[] = [];
-
-export const handleLogin = (email: string, password: string) => {
-    try {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed up 
-                // const user = userCredential.user;
-            })
-            .catch((error) => {
-                console.log('createUserWithEmailAndPassword Error', error);
-            });
-
-    } catch (err: any) {
-        console.log('handleLogin Error', err);
-    }
-};
 
 export const getAppImages = async () => {
     const promises = [

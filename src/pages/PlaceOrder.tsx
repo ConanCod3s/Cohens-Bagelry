@@ -1,9 +1,9 @@
 
 
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
-import { Stack, Typography, Box, Grid, Card, CircularProgress, Button, Switch, FormGroup, FormControlLabel } from '@mui/material';
+import { Stack, Typography, Box, Switch } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
 import Submit from '../components/forms/Submit';
 import LoginWithEmail from '../components/login/LoginWithEmail';
