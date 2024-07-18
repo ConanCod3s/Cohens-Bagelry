@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Stack } from '@mui/material';
 import { header } from '../theme/Base';
 
-const pages = ['Place Order', 'About', 'Pictures'];
+const pages = ['Order', 'About', 'Pictures'];
 
 function Header() {
     const navigate = useNavigate();

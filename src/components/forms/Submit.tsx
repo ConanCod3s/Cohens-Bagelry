@@ -1,8 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Box, Button, LinearProgress } from "@mui/material";
 import { useSnackbar } from 'notistack';
-import { auth, setFireBaseDoc } from '../../constants/firebase/Calls';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { auth, getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
 
 interface AvailableTypes {
     value: string;
@@ -11,6 +10,8 @@ interface AvailableTypes {
 }
 
 interface Props {
+    day: any,
+    time: any,
     firstName: string;
     lastName: string;
     email: string;
@@ -35,94 +36,20 @@ export default function Submit(props: Props) {
         } else if (totalQuantity <= 0) {
             enqueueSnackbar('Please select a quantity over 0', { variant: 'error' });
         } else {
-            handleAuthenticationAndOrder();
+            console.log('Ordered');
+            // isSubmitting(true);
+            handleOrder();
         }
-    }
-
-    const handleAuthenticationAndOrder = () => {
-        isSubmitting(true);
-        const pw = props.firstName[0] + '.' + props.lastName.substring(Math.floor(props.lastName.length / 2)) + '@' + props.phoneNumber.substring(props.phoneNumber.length - 4);
-
-        // Check if user is already logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                setFireBaseDoc({
-                    collectionName: 'customer',
-                    docId: user.uid,
-                    props: {
-                        firstName: props.firstName,
-                        lastName: props.lastName,
-                        email: props.email,
-                    }
-                })
-                    .then(() => {
-                        enqueueSnackbar('Order placed successfully!', { variant: 'success' });
-                    })
-                    .catch((err) => {
-                        console.log('Place order error', err);
-                        enqueueSnackbar('Failed to place order', { variant: 'error' });
-                    })
-                    .finally(() => {
-                        isSubmitting(false);
-                    });
-            } else {
-                // User is not signed in, create account
-                createUserWithEmailAndPassword(auth, props.email, pw)
-                    .then((userCredential: any) => {
-                        // Account created and user signed in
-                        setFireBaseDoc({
-                            collectionName: 'customer',
-                            docId: userCredential,
-                            props: {
-                                firstName: props.firstName,
-                                lastName: props.lastName,
-                                email: props.email,
-                            }
-                        }).then(() => {
-                            enqueueSnackbar('Order placed successfully!', { variant: 'success' });
-                        })
-                            .catch((err) => {
-                                console.log('Place order error', err);
-                                enqueueSnackbar('Failed to place order', { variant: 'error' });
-                            })
-                            .finally(() => {
-                                isSubmitting(false);
-                            });
-                    })
-                    .catch((error) => {
-                        console.log('createUserWithEmailAndPassword Error', error);
-                        // Try to log in if account already exists
-                        signInWithEmailAndPassword(auth, props.email, pw)
-                            .then((user: any) => {
-                                setFireBaseDoc({
-                                    collectionName: 'customer',
-                                    docId: user.uid,
-                                    props: {
-                                        firstName: props.firstName,
-                                        lastName: props.lastName,
-                                        email: props.email,
-                                    }
-                                }).then(() => {
-                                    enqueueSnackbar('Order placed successfully!', { variant: 'success' });
-                                })
-                                    .catch((err) => {
-                                        console.log('Place order error', err);
-                                        enqueueSnackbar('Failed to place order', { variant: 'error' });
-                                    })
-                                    .finally(() => {
-                                        isSubmitting(false);
-                                    });
-                            })
-                            .catch((loginError) => {
-                                console.log('signInWithEmailAndPassword Error', loginError);
-                                enqueueSnackbar('Authentication failed', { variant: 'error' });
-                                isSubmitting(false);
-                            });
-                    });
-            }
-        });
     };
+
+    async function handleOrder() {
+        const count = await getCount('orders');
+
+        setFireBaseDoc({
+            props: { ...props, orderId: count + 1 },
+            collectionName: 'orders'
+        })
+    }
 
     return (
         <Fragment>

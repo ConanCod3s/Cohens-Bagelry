@@ -2,10 +2,11 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
 interface Props {
+    userEmail?: string | null,
     setEmail: (email: string) => void
 }
 
-export default function Email({ setEmail }: Props) {
+export default function Email({ userEmail, setEmail }: Props) {
     const [error, setError] = useState<{
         key: string,
         msg: string,
@@ -18,11 +19,10 @@ export default function Email({ setEmail }: Props) {
 
     return (
         <TextField
-            label="Email"
+            label={userEmail ? userEmail : "Email"}
             variant="outlined"
-            required
-            helperText={error && error.key === 'email' ? error.msg : ''}
             error={error && error.key === 'email' ? true : false}
+            helperText={error && error.key === 'email' ? error.msg : ''}
             onChange={(event) => {
                 const email = event.target.value;
                 if (!validateEmail(email)) {

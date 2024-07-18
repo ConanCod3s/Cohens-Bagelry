@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Stack, TextField } from '@mui/material';
 import Email from '../forms/Email';
 import { auth } from '../../constants/firebase/Calls';
@@ -12,7 +12,7 @@ export default function LoginWithEmail({ email, setEmail }: any) {
 
     const handleLogin = () => {
         try {
-            createUserWithEmailAndPassword(auth, email, password)
+            signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     enqueueSnackbar('Logged In', { variant: 'success' });
                 })
@@ -24,9 +24,10 @@ export default function LoginWithEmail({ email, setEmail }: any) {
     };
 
     return (
-        <Stack>
+        <Stack spacing={1}>
             <Email setEmail={setEmail} />
             <TextField
+                required
                 id="outlined-disabled"
                 label="Password"
                 defaultValue=""
