@@ -13,6 +13,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import SignUpWithEmail from '../components/signUp/SignUpWithEmail.tsx';
 import Email from '../components/forms/Email.tsx';
 import DateTimeForPickup from '../components/forms/DateTime.tsx';
+import dayjs from 'dayjs';
+
 
 interface AvailableTypes {
     value: string,
@@ -64,8 +66,21 @@ export default function OrderPage() {
         quantity: number
     }[]>(typesArr);
 
-    const [day, setDay] = useState<any>();
-    const [time, setTime] = useState<any>();
+    dayjs('2019-01-25').format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]')
+    // 'YYYYescape 2019-01-25T00:00:00-02:00Z'
+
+    dayjs('2019-01-25').format('DD/MM/YYYY') // '25/01/2019'
+
+
+    const defaultValue = dayjs(new Date())
+        .add(1, 'day')
+        .set('hour', 4)
+        .set('minute', 0)
+        .set('second', 0)
+        .set('millisecond', 0);
+
+    const [day, setDay] = useState<any>(defaultValue);
+    const [time, setTime] = useState<any>(defaultValue);
 
     const [email, setEmail] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
@@ -135,10 +150,15 @@ export default function OrderPage() {
                         />
                         <PhoneNumber userPhoneNumber={userInfo.phoneNumber} setPhoneNumber={setPhoneNumber} />
                         <Email userEmail={userInfo.email} setEmail={setEmail} />
-                        <DateTimeForPickup setDay={setDay} setTime={setTime} />
+                        <DateTimeForPickup defaultValue={defaultValue} setDay={setDay} setTime={setTime} />
+
+                        {/* const [day, setDay] = useState<any>(dayjs(defaultValue).format('YYYY-MM-DD')); */}
+                        {/* const [time, setTime] = useState<any>(dayjs(defaultValue).format('HH:mm:ssZ[Z]')); */}
+
                         <Submit
-                            day={day}
-                            time={time}
+                            uid={userInfo.uid}
+                            day={dayjs(day).format('YYYY-MM-DD')}
+                            time={dayjs(time).format('HH:mm:ss')}
                             selections={selections.filter((obj) => obj.quantity > 0)}
                             email={email === '' ? userInfo.email : email}
                             phoneNumber={phoneNumber === '' ? userInfo.phoneNumber : phoneNumber}

@@ -5,16 +5,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
-const defaultValue = dayjs('2022-04-17T15:30');
 
-export default function DateTimeForPickup({ setDay, setTime }: any) {
+export default function DateTimeForPickup({ defaultValue, setDay, setTime }: any) {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DateField', 'TimeField', 'DateTimeField']}>
-                <DemoItem label="Day of Pickup">
+                <DemoItem label="Requested day for pickup">
                     <DateField defaultValue={defaultValue} onChange={setDay} />
                 </DemoItem>
-                <DemoItem label="Time for Pickup">
+                <DemoItem label="Requested time for pickup">
                     <TimeField defaultValue={defaultValue} onChange={setTime} />
                 </DemoItem>
             </DemoContainer>

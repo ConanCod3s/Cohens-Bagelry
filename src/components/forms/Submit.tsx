@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Box, Button, LinearProgress } from "@mui/material";
 import { useSnackbar } from 'notistack';
-import { auth, getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
+import { getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
 
 interface AvailableTypes {
     value: string;
@@ -10,6 +10,7 @@ interface AvailableTypes {
 }
 
 interface Props {
+    uid: string,
     day: any,
     time: any,
     firstName: string;
@@ -36,17 +37,32 @@ export default function Submit(props: Props) {
         } else if (totalQuantity <= 0) {
             enqueueSnackbar('Please select a quantity over 0', { variant: 'error' });
         } else {
-            console.log('Ordered');
-            // isSubmitting(true);
             handleOrder();
         }
     };
+
+    // day: "2024-07-19"
+    // email: "cohenjl13@gmail.com"
+    // firstName: "Joshua"
+    // lastName: "Cohen"
+    // phoneNumber: "2404440809"
+    // selections: Array(3) [ {…}, {…}, {…} ]
+    // time: "14:00:00"
 
     async function handleOrder() {
         const count = await getCount('orders');
 
         setFireBaseDoc({
-            props: { ...props, orderId: count + 1 },
+            props: {
+                orderedByUid: props.uid,
+                firstName: props.firstName,
+                lastName: props.lastName,
+                phoneNumber: props.phoneNumber,
+                orderId: "W-" + (count + 1).toString().padStart(4, '0'),
+                day: props.day,
+                time: props.time,
+                selections: props.selections.map((obj: any) => ({ quantity: obj.quantity, type: obj.label })),
+            },
             collectionName: 'orders'
         })
     }

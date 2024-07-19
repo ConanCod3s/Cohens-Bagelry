@@ -77,9 +77,6 @@ export async function setFireBaseDoc({ collectionName, docId, props }: any) {
     if (docId === undefined || docId === null) {
         const newref = doc(collection(db, collectionName));
         props = collectionName === "customers" ? { uid: newref.id, ...props } : props;
-
-        console.log(collectionName, docId, props)
-
         setDoc(newref, props);
     } else {
         setDoc(doc(db, collectionName, docId), props);
