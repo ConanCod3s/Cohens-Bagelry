@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import { Stack } from '@mui/material';
 import { header } from '../theme/Base';
-import BasicPopover from '../pages/OrderTable';
+import OrderTablePopover from '../pages/OrderTablePopover';
 
 const pages = ['Order', 'About', 'Pictures'];
 
@@ -16,7 +16,7 @@ function Header() {
     return (
         <AppBar position="sticky" sx={{ paddingLeft: 2, height: header }}>
             <Toolbar disableGutters>
-                <BasicPopover />
+                <OrderTablePopover />
                 <Button
                     sx={{ color: 'white' }}
                     onClick={() => navigate('/')}

@@ -12,7 +12,7 @@ import { getCollection } from '../constants/firebase/Calls';
 import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 import { Popover } from '@mui/material';
 
-export default function OrderTable() {
+export default function OrderTablePopover() {
     const [rows, setRows] = useState<[]>([]);
     const [anchorEl, setAnchorEl] = useState<any>(null);
 
