@@ -4,7 +4,6 @@ import { BottomNavigation, Tooltip } from "@mui/material";
 import { Home, LightMode, NightlightRound, Email } from "@mui/icons-material";
 import { footer } from "../theme/Base";
 
-
 export default function Footer({ swapTheme, themeMode }: any) {
 
     const navigate = useNavigate();

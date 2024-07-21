@@ -6,7 +6,7 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
-import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer, getDocs } from "firebase/firestore";
 
 // Initialize Cloud Firestore and get a reference to the service
 const auth = getAuth(app);
@@ -104,11 +104,21 @@ export async function getDocumentById({ collectionName, docId }: {
     }
 }
 
-export async function getCount(coll: string) {
-    const count = await getCountFromServer(collection(db, coll)).then((res) => {
+export async function getCount(collectionName: string) {
+    const count = await getCountFromServer(collection(db, collectionName)).then((res) => {
         return res.data().count;
     });
     return count;
+}
+
+// import { collection, doc, setDoc } from "firebase/firestore"; 
+// const citiesRef = collection(db, "cities");
+
+export async function getCollection(collectionName: string) {
+    const docRef = collection(db, collectionName);
+    const snap = await getDocs(docRef);
+    const res = snap.docs.map(doc => doc.data());
+    return res;
 }
 
 export { auth, db, googleProvider, storage }; 

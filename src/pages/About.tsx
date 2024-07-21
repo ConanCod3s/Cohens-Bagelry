@@ -1,10 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
 export default function About() {
 
-
     return (
-        <Box sx={{ justifyContent: 'space-around', textAlign: 'center', paddingTop: 5 }} >
+        <Container sx={{ justifyContent: 'space-around', textAlign: 'center', paddingTop: 5 }} >
             <Typography variant="h4"> Our Story: From Code to Crust </Typography>
             <Box sx={{ height: 25, width: '100%' }} />
             <Typography >
@@ -35,6 +34,6 @@ export default function About() {
                 Join us on this journey from code to crust, and savor the flavors that have been generations in the making.
                 Welcome to Cohen's Bagelry, where every bagel is a piece of home.
             </Typography>
-        </Box>
+        </Container>
     )
 };

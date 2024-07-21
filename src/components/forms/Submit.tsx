@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { Box, Button, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useSnackbar } from 'notistack';
 import { getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
 
@@ -23,6 +23,7 @@ interface Props {
 export default function Submit(props: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const [submitting, isSubmitting] = useState<boolean>(false);
+    const [success, isSuccessful] = useState<boolean>(false);
 
     const totalQuantity = props.selections.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
 
@@ -41,15 +42,8 @@ export default function Submit(props: Props) {
         }
     };
 
-    // day: "2024-07-19"
-    // email: "cohenjl13@gmail.com"
-    // firstName: "Joshua"
-    // lastName: "Cohen"
-    // phoneNumber: "2404440809"
-    // selections: Array(3) [ {…}, {…}, {…} ]
-    // time: "14:00:00"
-
     async function handleOrder() {
+        isSubmitting(true);
         const count = await getCount('orders');
 
         setFireBaseDoc({
@@ -64,6 +58,11 @@ export default function Submit(props: Props) {
                 selections: props.selections.map((obj: any) => ({ quantity: obj.quantity, type: obj.label })),
             },
             collectionName: 'orders'
+
+        }).then(() => {
+            enqueueSnackbar('Ordered', { variant: 'success' });
+            isSuccessful(true);
+            isSubmitting(false);
         })
     }
 
@@ -73,14 +72,16 @@ export default function Submit(props: Props) {
                 sx={{ width: '100%', height: 35 }}
                 variant="contained"
                 onClick={validateProps}
-                disabled={submitting}
+                disabled={success}
             >
                 {submitting ? (
                     <Box sx={{ width: '100%' }}>
                         <LinearProgress />
                     </Box>
-                ) : 'Place Order'}
+                ) : success ? 'Thank you for your order!' : 'Place Order'}
             </Button>
+            {success &&
+                <Typography sx={{ textAlign: 'center' }}>Once your order has been placed, please allow 24 hours for me to contact you and to confirm.</Typography>}
         </Fragment>
     );
 }

@@ -1,5 +1,3 @@
-
-
 import { Fragment, useEffect, useState } from 'react';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
@@ -14,7 +12,6 @@ import SignUpWithEmail from '../components/signUp/SignUpWithEmail.tsx';
 import Email from '../components/forms/Email.tsx';
 import DateTimeForPickup from '../components/forms/DateTime.tsx';
 import dayjs from 'dayjs';
-
 
 interface AvailableTypes {
     value: string,
@@ -65,12 +62,6 @@ export default function OrderPage() {
         label: string,
         quantity: number
     }[]>(typesArr);
-
-    dayjs('2019-01-25').format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]')
-    // 'YYYYescape 2019-01-25T00:00:00-02:00Z'
-
-    dayjs('2019-01-25').format('DD/MM/YYYY') // '25/01/2019'
-
 
     const defaultValue = dayjs(new Date())
         .add(1, 'day')
@@ -151,9 +142,6 @@ export default function OrderPage() {
                         <PhoneNumber userPhoneNumber={userInfo.phoneNumber} setPhoneNumber={setPhoneNumber} />
                         <Email userEmail={userInfo.email} setEmail={setEmail} />
                         <DateTimeForPickup defaultValue={defaultValue} setDay={setDay} setTime={setTime} />
-
-                        {/* const [day, setDay] = useState<any>(dayjs(defaultValue).format('YYYY-MM-DD')); */}
-                        {/* const [time, setTime] = useState<any>(dayjs(defaultValue).format('HH:mm:ssZ[Z]')); */}
 
                         <Submit
                             uid={userInfo.uid}
