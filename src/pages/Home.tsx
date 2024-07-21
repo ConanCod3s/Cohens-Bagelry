@@ -1,5 +1,5 @@
 // import About from "../pages/About.tsx";
-import PlaceOrder from "../pages/PlaceOrder.tsx";
+import OrderPage from "../pages/OrderPage.tsx";
 
 import { Grid } from "@mui/material";
 import Pictures from "./Pictures.tsx";
@@ -14,9 +14,8 @@ export default function App() {
             </Grid>
 
             <Grid item sm={8} md={8} lg={8} sx={{ overflow: 'auto', height: '100%' }}>
-                <PlaceOrder />
+                <OrderPage />
             </Grid>
-
         </Grid>
     )
 }

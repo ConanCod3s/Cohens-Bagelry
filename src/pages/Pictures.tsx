@@ -3,7 +3,6 @@ import { Card, CardMedia, CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from 'react';
 import { appImages, getAppImages } from '../constants/firebase/Calls';
 
-
 export default function Pictures() {
 
     const [isLoading, setLoading] = useState<boolean>(true);

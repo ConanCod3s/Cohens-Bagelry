@@ -1,7 +1,8 @@
 import { Box, Typography, Button } from '@mui/material';
-// import Bagel404 from '../assets/bagel404.png';
+import { useNavigate } from "react-router-dom";
 
 export default function PageNotFound() {
+    const navigate = useNavigate();
 
     return (
         <Box
@@ -16,21 +17,19 @@ export default function PageNotFound() {
                 padding: 2
             }}
         >
-            {/* <img src={Bagel404} alt="404 Bagel" style={{ width: '200px', height: '200px', marginBottom: '20px' }} /> */}
             <Typography variant="h1" sx={{ fontSize: '6rem', fontWeight: 'bold', color: '#ff7043' }}>
                 404
             </Typography>
             <Typography variant="h4" sx={{ marginBottom: '20px', color: '#ff7043' }}>
-                Uh-oh! You’re in a hole lot of trouble.
+                Uh-oh! You're in a hole lot of trouble.
             </Typography>
             <Typography variant="h6" sx={{ marginBottom: '20px', color: '#757575' }}>
-                The page you’re looking for doesn’t exist. Maybe it’s time for a bagel break?
+                The page you're looking for doesn't exist. Maybe it's time for a bagel break?
             </Typography>
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => window.location.href = '/'}
-                sx={{ backgroundColor: '#ff7043', ':hover': { backgroundColor: '#ff8a65' } }}
+                onClick={() => navigate('/')}
             >
                 Go Back Home
             </Button>

@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 import { useNavigate } from "react-router-dom";
 import { Stack } from '@mui/material';
 import { header } from '../theme/Base';
+import OrderTablePopover from '../pages/OrderTablePopover';
 
-const pages = ['Place Order', 'About', 'Pictures'];
+const pages = ['Order', 'About', 'Pictures'];
 
 function Header() {
     const navigate = useNavigate();
@@ -16,11 +16,9 @@ function Header() {
     return (
         <AppBar position="sticky" sx={{ paddingLeft: 2, height: header }}>
             <Toolbar disableGutters>
-                <BakeryDiningIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, transform: `rotate(-${Math.floor(Math.random() * 361)}deg)` }} />
+                <OrderTablePopover />
                 <Button
-                    sx={{
-                        color: 'white'
-                    }}
+                    sx={{ color: 'white' }}
                     onClick={() => navigate('/')}
                 >
                     <Stack>

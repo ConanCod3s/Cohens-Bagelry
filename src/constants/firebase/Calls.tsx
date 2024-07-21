@@ -6,7 +6,7 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
-import { getFirestore, collection, setDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer, getDocs } from "firebase/firestore";
 
 // Initialize Cloud Firestore and get a reference to the service
 const auth = getAuth(app);
@@ -76,11 +76,49 @@ export async function setFireBaseDoc({ collectionName, docId, props }: any) {
     /**If we dont send an id than we should create a new doc and generate one */
     if (docId === undefined || docId === null) {
         const newref = doc(collection(db, collectionName));
-        props = collectionName === "orders" ? { uid: newref.id, ...props } : props;
+        props = collectionName === "customers" ? { uid: newref.id, ...props } : props;
         setDoc(newref, props);
     } else {
         setDoc(doc(db, collectionName, docId), props);
     }
+}
+
+/**
+ * Retrieves a document from Firestore by its ID.
+ * @param {string} collectionName - The name of the collection.
+ * @param {string} docId - The ID of the document to retrieve.
+ * @returns {Promise<object>} - A promise that resolves to the document data.
+ */
+
+export async function getDocumentById({ collectionName, docId }: {
+    collectionName: string,
+    docId: string
+}) {
+    try {
+        const docRef = doc(db, collectionName, docId);
+        const docSnap = await getDoc(docRef);
+        return docSnap.data();
+    } catch (error) {
+        console.error("Error getting document:", error);
+        throw error;
+    }
+}
+
+export async function getCount(collectionName: string) {
+    const count = await getCountFromServer(collection(db, collectionName)).then((res) => {
+        return res.data().count;
+    });
+    return count;
+}
+
+// import { collection, doc, setDoc } from "firebase/firestore"; 
+// const citiesRef = collection(db, "cities");
+
+export async function getCollection(collectionName: string) {
+    const docRef = collection(db, collectionName);
+    const snap = await getDocs(docRef);
+    const res = snap.docs.map(doc => doc.data());
+    return res;
 }
 
 export { auth, db, googleProvider, storage }; 

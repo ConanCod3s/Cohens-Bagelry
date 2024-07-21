@@ -2,10 +2,11 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
 interface Props {
-    setPhoneNumber: (email: string) => void
+    userPhoneNumber?: string | null,
+    setPhoneNumber: (number: string) => void
 }
 
-export default function PhoneNumber({ setPhoneNumber }: Props) {
+export default function PhoneNumber({ userPhoneNumber, setPhoneNumber }: Props) {
     const [error, setError] = useState<{
         key: string,
         msg: string,
@@ -18,7 +19,7 @@ export default function PhoneNumber({ setPhoneNumber }: Props) {
 
     return (
         <TextField
-            label="Phone Number"
+            label={userPhoneNumber ? userPhoneNumber : "Phone Number"}
             variant="outlined"
             name="phone"
             helperText={error && error.key === 'phone' ? error.msg : ''}

@@ -43,7 +43,7 @@ export default function Quantity({ availableTypes, setAvailableTypes, type, saku
             onChange={(event) => {
                 const value = parseInt(event.target.value);
                 const totalQuantity = availableTypes.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
-                const newQuantity = Math.min(value, 24 - (totalQuantity - type.quantity));
+                const newQuantity = Math.min(value, 12 - (totalQuantity - type.quantity));
 
                 if (value < 0) {
                     setError({ key: type.label + sakuin, msg: 'Please select a number greater than 0' });
