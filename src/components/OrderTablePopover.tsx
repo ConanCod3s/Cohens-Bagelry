@@ -7,8 +7,9 @@ import {
     TableHead,
     TableRow,
     Paper,
+    Box,
 } from '@mui/material';
-import { getCollection } from '../constants/firebase/Calls';
+import { getCollection } from '../services/firebase/Calls';
 import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 import { Popover } from '@mui/material';
 
@@ -35,10 +36,10 @@ export default function OrderTablePopover() {
     };
 
     return (
-        <div>
+        <Box>
             <BakeryDiningIcon
                 sx={{
-                    display: { xs: 'none', md: 'flex' },
+                    display: { xs: 'flex', md: 'flex' },
                     mr: 1,
                     transform: `rotate(-${Math.floor(Math.random() * 361)}deg)`
                 }}
@@ -88,6 +89,6 @@ export default function OrderTablePopover() {
                     </Table>
                 </TableContainer>
             </Popover>
-        </div>
+        </Box>
     );
 };

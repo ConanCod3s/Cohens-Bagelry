@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
-import { getURL, getAppImages, appImages } from '../constants/firebase/Calls';
+import { getURL, getAppImages, appImages } from '../services/firebase/Calls';
 
 export default function SimpleFade() {
     const [img, setImg] = useState<any>(null);

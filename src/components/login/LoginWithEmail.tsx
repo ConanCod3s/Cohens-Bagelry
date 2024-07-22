@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Stack, TextField } from '@mui/material';
 import Email from '../forms/Email';
-import { auth } from '../../constants/firebase/Calls';
+import { auth } from '../../services/firebase/Calls';
 import { useSnackbar } from 'notistack';
 
 
-export default function LoginWithEmail({ email, setEmail }: any) {
-    const [password, setPassword] = useState('');
+export default function LoginWithEmail() {
     const { enqueueSnackbar } = useSnackbar();
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState<string>('');
 
     const handleLogin = () => {
         try {

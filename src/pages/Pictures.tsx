@@ -1,7 +1,7 @@
-import { Card, CardMedia, CircularProgress } from "@mui/material";
-
-import { Fragment, useEffect, useState } from 'react';
-import { appImages, getAppImages } from '../constants/firebase/Calls';
+import { Masonry } from '@mui/lab';
+import { useEffect, useState } from 'react';
+import { CardMedia, CircularProgress } from "@mui/material";
+import { appImages, getAppImages } from '../services/firebase/Calls';
 
 export default function Pictures() {
 
@@ -20,19 +20,18 @@ export default function Pictures() {
     if (isLoading && appImages.length === 0) return <CircularProgress />
 
     return (
-        <Fragment>
+        <Masonry columns={{ xs: 0, sm: 2, md: 3 }} spacing={2} sx={{ padding: 1 }}>
             {appImages.map((image: any, sakuin: number) => (
-                <Card sx={{ display: 'flex', justifyContent: 'center' }} key={sakuin}>
-                    <CardMedia
-                        image={image}
-                        component="img"
-                        sx={{
-                            maxWidth: '75vw',
-
-                        }}
-                    />
-                </Card>))}
-        </Fragment>
-
+                <CardMedia
+                    key={sakuin}
+                    image={image}
+                    component="img"
+                    sx={{
+                        width: '100%',
+                        height: 'auto',
+                    }}
+                />
+            ))}
+        </Masonry>
     )
 }

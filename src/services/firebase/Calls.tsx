@@ -69,9 +69,6 @@ export async function getURL(imgPath: string) {
     return downloadedItem;
 }
 
-// Object { selections: (6) […], email: "cohenjl13@gmail.com", phoneNumber: "2404440809", firstName: "Joshua", lastName: "Cohen" }
-
-// export async function placeOrder(props: any) {
 export async function setFireBaseDoc({ collectionName, docId, props }: any) {
     /**If we dont send an id than we should create a new doc and generate one */
     if (docId === undefined || docId === null) {
@@ -110,9 +107,6 @@ export async function getCount(collectionName: string) {
     });
     return count;
 }
-
-// import { collection, doc, setDoc } from "firebase/firestore"; 
-// const citiesRef = collection(db, "cities");
 
 export async function getCollection(collectionName: string) {
     const docRef = collection(db, collectionName);

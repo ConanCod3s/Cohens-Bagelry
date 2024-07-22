@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useSnackbar } from 'notistack';
-import { getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
+import { getCount, setFireBaseDoc } from '../../services/firebase/Calls';
 
 interface AvailableTypes {
     value: string;
@@ -67,9 +67,9 @@ export default function Submit(props: Props) {
     }
 
     return (
-        <Fragment>
+        <Box sx={{ width: '100%', height: 35, textAlign: 'center' }}>
             <Button
-                sx={{ width: '100%', height: 35 }}
+                sx={{}}
                 variant="contained"
                 onClick={validateProps}
                 disabled={success}
@@ -82,6 +82,6 @@ export default function Submit(props: Props) {
             </Button>
             {success &&
                 <Typography sx={{ textAlign: 'center' }}>Once your order has been placed, please allow 24 hours for me to contact you and to confirm.</Typography>}
-        </Fragment>
+        </Box>
     );
 }
