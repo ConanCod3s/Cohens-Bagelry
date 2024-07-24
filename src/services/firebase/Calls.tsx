@@ -4,7 +4,7 @@ import { app } from "./Config";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signOut } from "firebase/auth";
 
 import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer, getDocs } from "firebase/firestore";
 
@@ -51,6 +51,16 @@ export const getAppImages = async () => {
 
     appImages = results;
 }
+
+export async function signUserOut() {
+    try {
+        await signOut(auth);
+        console.log('User has been logged out');
+        window.location.href = '/';
+    } catch (error) {
+        console.error('Error signing out:', error);
+    }
+};
 
 export async function getURL(imgPath: string) {
     let downloadedItem = "";

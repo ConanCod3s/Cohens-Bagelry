@@ -10,7 +10,6 @@ import OrderTablePopover from './OrderTablePopover';
 import { getPages } from '../router/Router';
 import { useState, useEffect } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 
 function Header() {
     const pages = getPages();

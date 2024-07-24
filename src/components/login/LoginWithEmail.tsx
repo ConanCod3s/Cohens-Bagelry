@@ -4,9 +4,10 @@ import { Button, Stack, TextField } from '@mui/material';
 import Email from '../forms/Email';
 import { auth } from '../../services/firebase/Calls';
 import { useSnackbar } from 'notistack';
-
+import { useNavigate } from "react-router-dom";
 
 export default function LoginWithEmail() {
+    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState<string>('');
@@ -16,6 +17,7 @@ export default function LoginWithEmail() {
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     enqueueSnackbar('Logged In', { variant: 'success' });
+                    navigate("/Order")
                 })
                 .catch((error: any) => {
                     enqueueSnackbar(error.message, { variant: 'error' });
@@ -32,6 +34,7 @@ export default function LoginWithEmail() {
                 id="outlined-disabled"
                 label="Password"
                 defaultValue=""
+                type="password"
                 onChange={(event) => setPassword(event.target.value)}
             />
             <Button onClick={handleLogin}>Submit</Button>

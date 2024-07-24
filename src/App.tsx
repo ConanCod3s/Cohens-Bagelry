@@ -9,6 +9,7 @@ import Footer from "./components/Footer.tsx";
 import { useUser } from './services/providers/User.tsx';
 import LoginContainer from "./pages/LoginContainer.tsx";
 import { Box, Container } from "@mui/material";
+import Pictures from "./pages/Pictures.tsx";
 
 export default function App() {
     const { loggedIn } = useUser();
@@ -20,7 +21,19 @@ export default function App() {
             <Header />
             <Box sx={{ height: workingWindow, overflow: 'auto', padding: 1 }}>
                 {loggedIn ?
-                    <Outlet /> : <LoginContainer />}
+                    <Outlet /> :
+                    <Container>
+                        <Box sx={(theme) => ({
+                            position: 'sticky',
+                            top: 0,
+                            backgroundColor: theme.palette.primary.main
+                        })}>
+                            <LoginContainer />
+                        </Box>
+                        <Box>
+                            <Pictures />
+                        </Box>
+                    </Container>}
             </Box>
             <Footer themeMode={themeMode} swapTheme={swapTheme} />
         </ThemeProvider>

@@ -69,7 +69,6 @@ export default function Submit(props: Props) {
     return (
         <Box sx={{ width: '100%', height: 35, textAlign: 'center' }}>
             <Button
-                sx={{}}
                 variant="contained"
                 onClick={validateProps}
                 disabled={success}
