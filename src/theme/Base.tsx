@@ -1,74 +1,75 @@
-import { createTheme } from "@mui/material";
+import { createTheme, ThemeOptions } from "@mui/material";
 
 // Buffers for static components, all in vh
 export const header: number = 80;
 export const footer: number = 40;
 export const workingWindow: number = window.innerHeight - (header + footer);
 
+// Common typography settings
+const typographySettings = {
+    fontSize: 16,
+    fontWeight: 400,
+    fontFamily: ['Garamond', 'Merriweather', 'serif'].join(","),
+};
+
+// Common component overrides
 const componentOverrides = {
     MuiTypography: {
         styleOverrides: {
             root: {
-                fontWeight: 900,
+                fontWeight: 900,  // This is a global override
             },
         },
     },
 };
 
-// Updated BaseTheme to include rustic theme typography settings
-const BaseTheme = {
-    typography: {
-        fontSize: 16,
-        fontWeight: 400, // Adjusted to be less bold than the original 900 to fit rustic styles better
-        fontFamily: ['Garamond', 'Merriweather', 'serif'].join(","),
-    },
+// Base theme settings
+const BaseTheme: ThemeOptions = {
+    typography: typographySettings,
+    components: componentOverrides,
 };
 
+// Light theme configuration
 const lightTheme = createTheme({
     ...BaseTheme,
     palette: {
         mode: "light",
         primary: {
-            light: '#a98274',  // Lighter brown for a more subtle approach in light theme
-            main: '#8b6f47',  // Medium brown to maintain rustic feel
-            dark: '#5d4037',  // Dark brown as in dark theme
+            light: '#a98274',
+            main: '#8b6f47',
+            dark: '#5d4037',
         },
         secondary: {
-            light: '#ffb04c',  // Light burnt orange for light theme
-            main: '#d84315',  // Burnt orange for rustic secondary color
-            dark: '#bf360c',  // Darker shade of burnt orange
+            light: '#ffb04c',
+            main: '#d84315',
+            dark: '#bf360c',
         },
-    },
-    components: {
-        ...componentOverrides,
     },
 });
 
+// Dark theme configuration
 const darkTheme = createTheme({
     ...BaseTheme,
     palette: {
         mode: "dark",
         primary: {
-            light: '#5D4037',   // Lighter shade of dark brown
-            main: '#3E2723',  // Dark walnut brown as primary dark color
-            dark: '#321911',   // Even darker brown, almost black
+            light: '#5D4037',
+            main: '#3E2723',
+            dark: '#321911',
         },
         secondary: {
-            light: '#FF8A65',  // Lighter shade of burnt orange
-            main: '#D84315',  // Burnt orange for rustic feel
-            dark: '#BF360C',  // Darker shade of burnt orange
+            light: '#FF8A65',
+            main: '#D84315',
+            dark: '#BF360C',
         },
         background: {
-            default: '#3E2723', // Dark brown background
-            paper: '#4E342E', // Slightly lighter brown for paper elements
+            default: '#3E2723',
+            paper: '#4E342E',
         },
         text: {
-            primary: '#FFFFFF', // White text for contrast
-            secondary: '#F5F5F5', // Slightly off-white for secondary text
+            primary: '#FFFFFF',
+            secondary: '#F5F5F5',
         },
-    },
-    components: {
-        ...componentOverrides,
     },
 });
 

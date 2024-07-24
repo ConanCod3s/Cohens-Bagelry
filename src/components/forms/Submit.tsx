@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useSnackbar } from 'notistack';
-import { getCount, setFireBaseDoc } from '../../constants/firebase/Calls';
+import { getCount, setFireBaseDoc } from '../../services/firebase/Calls';
 
 interface AvailableTypes {
     value: string;
@@ -10,9 +10,9 @@ interface AvailableTypes {
 }
 
 interface Props {
-    uid: string,
-    day: any,
-    time: any,
+    uid: string;
+    day: any;
+    time: any;
     firstName: string;
     lastName: string;
     email: string;
@@ -20,20 +20,29 @@ interface Props {
     selections: AvailableTypes[];
 }
 
-export default function Submit(props: Props) {
+export default function Submit({
+    uid,
+    day,
+    time,
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    selections
+}: Props) {
     const { enqueueSnackbar } = useSnackbar();
-    const [submitting, isSubmitting] = useState<boolean>(false);
-    const [success, isSuccessful] = useState<boolean>(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
 
-    const totalQuantity = props.selections.reduce((a: number, b: AvailableTypes) => a + b.quantity, 0);
+    const totalQuantity = selections.reduce((a, b) => a + b.quantity, 0);
 
     // Validate all the required fields before submitting
-    function validateProps() {
-        if (props.firstName.length === 0) {
+    const validateProps = () => {
+        if (!firstName.trim()) {
             enqueueSnackbar('Please add a First name', { variant: 'error' });
-        } else if (props.email.length === 0) {
+        } else if (!email.trim()) {
             enqueueSnackbar('Email Is Missing, please add a valid email', { variant: 'error' });
-        } else if (props.phoneNumber.length === 0) {
+        } else if (!phoneNumber.trim()) {
             enqueueSnackbar('An invalid, incomplete, or no phone number was added', { variant: 'warning' });
         } else if (totalQuantity <= 0) {
             enqueueSnackbar('Please select a quantity over 0', { variant: 'error' });
@@ -42,37 +51,41 @@ export default function Submit(props: Props) {
         }
     };
 
-    async function handleOrder() {
-        isSubmitting(true);
-        const count = await getCount('orders');
-
-        setFireBaseDoc({
-            props: {
-                orderedByUid: props.uid,
-                firstName: props.firstName,
-                lastName: props.lastName,
-                phoneNumber: props.phoneNumber,
-                orderId: "W-" + (count + 1).toString().padStart(4, '0'),
-                day: props.day,
-                time: props.time,
-                selections: props.selections.map((obj: any) => ({ quantity: obj.quantity, type: obj.label })),
-            },
-            collectionName: 'orders'
-
-        }).then(() => {
+    const handleOrder = async () => {
+        setSubmitting(true);
+        try {
+            const count = await getCount('orders');
+            await setFireBaseDoc({
+                props: {
+                    orderedByUid: uid,
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    orderId: `W-${(count + 1).toString().padStart(4, '0')}`,
+                    day,
+                    time,
+                    selections: selections.map(obj => ({
+                        quantity: obj.quantity,
+                        type: obj.label,
+                    })),
+                },
+                collectionName: 'orders'
+            });
             enqueueSnackbar('Ordered', { variant: 'success' });
-            isSuccessful(true);
-            isSubmitting(false);
-        })
-    }
+            setSuccess(true);
+        } catch (error) {
+            enqueueSnackbar('Failed to place order', { variant: 'error' });
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
-        <Fragment>
+        <Box sx={{ width: '100%', height: 35, textAlign: 'center' }}>
             <Button
-                sx={{ width: '100%', height: 35 }}
                 variant="contained"
                 onClick={validateProps}
-                disabled={success}
+                disabled={success || submitting}
             >
                 {submitting ? (
                     <Box sx={{ width: '100%' }}>
@@ -80,8 +93,11 @@ export default function Submit(props: Props) {
                     </Box>
                 ) : success ? 'Thank you for your order!' : 'Place Order'}
             </Button>
-            {success &&
-                <Typography sx={{ textAlign: 'center' }}>Once your order has been placed, please allow 24 hours for me to contact you and to confirm.</Typography>}
-        </Fragment>
+            {success && (
+                <Typography sx={{ textAlign: 'center' }}>
+                    Once your order has been placed, please allow 24 hours for me to contact you and to confirm.
+                </Typography>
+            )}
+        </Box>
     );
 }

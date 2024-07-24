@@ -1,40 +1,45 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Button, Stack, TextField } from '@mui/material';
-import Email from '../forms/Email';
-import { auth } from '../../constants/firebase/Calls';
+import { Button, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from "react-router-dom";
+import Email from '../forms/Email';
+import PasswordForm from '../forms/Password';
+import { auth } from '../../services/firebase/Calls';
 
-
-export default function LoginWithEmail({ email, setEmail }: any) {
-    const [password, setPassword] = useState('');
+export default function LoginWithEmail() {
+    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
     const handleLogin = () => {
-        try {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    enqueueSnackbar('Logged In', { variant: 'success' });
-                })
-                .catch((error: any) => {
-                    enqueueSnackbar(error.message, { variant: 'error' });
-                });
-        } catch (err: any) {
+        if (!email || !password) {
+            enqueueSnackbar('Please fill in all fields', { variant: 'warning' });
+            return;
         }
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                enqueueSnackbar('Logged In', { variant: 'success' });
+                navigate("/Order");
+            })
+            .catch((error: any) => {
+                enqueueSnackbar(error.message, { variant: 'error' });
+            });
     };
 
     return (
-        <Stack spacing={1}>
-            <Email setEmail={setEmail} />
-            <TextField
-                required
-                id="outlined-disabled"
-                label="Password"
-                defaultValue=""
-                onChange={(event) => setPassword(event.target.value)}
+        <Stack spacing={2}>
+            <Email userEmail={email} setEmail={setEmail} />
+            <PasswordForm
+                password={password}
+                setPassword={setPassword}
+                errors={passwordErrors}
+                setErrors={setPasswordErrors}
             />
-            <Button onClick={handleLogin}>Submit</Button>
+            <Button variant="contained" onClick={handleLogin}>Submit</Button>
         </Stack>
-
-    )
-};
+    );
+}

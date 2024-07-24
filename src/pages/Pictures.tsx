@@ -1,38 +1,45 @@
-import { Card, CardMedia, CircularProgress } from "@mui/material";
-
-import { Fragment, useEffect, useState } from 'react';
-import { appImages, getAppImages } from '../constants/firebase/Calls';
+import { Masonry } from '@mui/lab';
+import { useEffect, useState } from 'react';
+import { CardMedia, CircularProgress } from "@mui/material";
+import { appImages, getAppImages } from '../services/firebase/Calls';
 
 export default function Pictures() {
-
     const [isLoading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const getData = async () => {
-            await getAppImages().then(() => {
-                setLoading(!isLoading);
-            });
+        const fetchImages = async () => {
+            try {
+                await getAppImages();
+            } catch (error) {
+                console.error("Failed to fetch images:", error);
+            } finally {
+                setLoading(false);
+            }
         };
-        if (appImages.length === 0)
-            getData();
+
+        if (appImages.length === 0) {
+            fetchImages();
+        } else {
+            setLoading(false); // If images are already available, stop loading
+        }
     }, []);
 
-    if (isLoading && appImages.length === 0) return <CircularProgress />
+    if (isLoading) return <CircularProgress sx={{ display: 'block', margin: 'auto' }} />;
 
     return (
-        <Fragment>
-            {appImages.map((image: any, sakuin: number) => (
-                <Card sx={{ display: 'flex', justifyContent: 'center' }} key={sakuin}>
-                    <CardMedia
-                        image={image}
-                        component="img"
-                        sx={{
-                            maxWidth: '75vw',
-
-                        }}
-                    />
-                </Card>))}
-        </Fragment>
-
-    )
+        <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2} sx={{ padding: 1 }}>
+            {appImages.map((image, index) => (
+                <CardMedia
+                    key={index}
+                    image={image}
+                    component="img"
+                    sx={{
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'cover',
+                    }}
+                />
+            ))}
+        </Masonry>
+    );
 }

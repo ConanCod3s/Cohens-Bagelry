@@ -1,57 +1,64 @@
 import { useState, useEffect, Fragment } from 'react';
 import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
-import { getURL, getAppImages, appImages } from '../constants/firebase/Calls';
+import { getURL, getAppImages, appImages } from '../services/firebase/Calls';
+
+const IMAGE_URL = "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg";
+const IMAGE_INTERVAL = 5000; // Interval time in milliseconds
 
 export default function SimpleFade() {
     const [img, setImg] = useState<any>(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
     useEffect(() => {
-        const getData = async () => {
-            await getURL(
-                "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg"
-            ).then((res: any) => {
-                setImg(res);
-            });
-            if (appImages.length === 0) await getAppImages();
+        const fetchData = async () => {
+            try {
+                const imageUrl = await getURL(IMAGE_URL);
+                setImg(imageUrl);
+
+                if (appImages.length === 0) {
+                    await getAppImages();
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
         };
-        getData();
+        fetchData();
     }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setActiveIndex((current) =>
-                current === appImages.length - 1 ? 0 : current + 1
+            setActiveIndex((prevIndex) =>
+                prevIndex === appImages.length - 1 ? 0 : prevIndex + 1
             );
-        }, 5000);
+        }, IMAGE_INTERVAL);
+
         return () => clearInterval(timer);
     }, [appImages.length]);
 
-    if (appImages.length === 0)
-        return (
-            <Box
-                src={img}
-                component="img"
-                sx={(theme) => ({
-                    height: '60vh',
-                    maxWidth: '80vw',
-                    borderRadius: "10px",
-                    boxShadow: `0px 0px 5px 1px black`,
-                    border: `1px solid ${theme.palette.primary.main}`,
-                })}
-            />);
-    else
-        return (
-            <Fragment>
-                {appImages.map((image, index) => (
+    return (
+        <Fragment>
+            {appImages.length === 0 ? (
+                <Box
+                    src={img}
+                    component="img"
+                    sx={(theme) => ({
+                        height: '60vh',
+                        maxWidth: '80vw',
+                        borderRadius: "10px",
+                        boxShadow: `0px 0px 5px 1px black`,
+                        border: `1px solid ${theme.palette.primary.main}`,
+                    })}
+                />
+            ) : (
+                appImages.map((image, index) => (
                     <Fade
-                        key={`${image}-${index}`}
+                        key={index}
                         in={index === activeIndex}
                         timeout={{ enter: 1000, exit: 1000 }}
                     >
                         <Box
-                            src={appImages[index]}
+                            src={image}
                             component="img"
                             sx={(theme) => ({
                                 height: '60vh',
@@ -59,11 +66,12 @@ export default function SimpleFade() {
                                 borderRadius: "10px",
                                 boxShadow: `0px 0px 5px 1px black`,
                                 border: `1px solid ${theme.palette.primary.main}`,
-                                display: index === activeIndex ? "" : "none",
+                                display: index === activeIndex ? "block" : "none",
                             })}
                         />
                     </Fade>
-                ))}
-            </Fragment>
-        );
+                ))
+            )}
+        </Fragment>
+    );
 }
