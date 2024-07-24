@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import PhoneNumber from '../components/forms/PhoneNumber';
 import TextField from '@mui/material/TextField';
-import { Stack, Typography, Box, Grid } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import Quantity from '../components/forms/Quantity';
 import Submit from '../components/forms/Submit';
 import Email from '../components/forms/Email.tsx';
 import DateTimeForPickup from '../components/forms/DateTime.tsx';
 import dayjs from 'dayjs';
 import { useUser } from '../services/providers/User';
-import { workingWindow } from '../theme/Base.tsx';
 
 interface AvailableTypes {
     value: string,
