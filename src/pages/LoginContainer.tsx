@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Container, Grid, Stack, Switch, Typography } from "@mui/material";
-import Pictures from "./Pictures";
-import { workingWindow } from "../theme/Base";
+import { Stack, Switch, Typography } from "@mui/material";
 import LoginWithEmail from "../components/login/LoginWithEmail";
 import SignUpWithEmail from "../components/signUp/SignUpWithEmail";
 import { Fragment } from "react/jsx-runtime";
