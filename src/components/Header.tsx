@@ -1,66 +1,75 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
-import { Drawer, IconButton, List, ListItem, Popover, Stack } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    Typography,
+    Button,
+    Drawer,
+    IconButton,
+    List,
+    ListItem,
+    Popover,
+    Stack,
+    Grid
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { header } from '../theme/Base';
 import OrderTablePopover from './OrderTablePopover';
 import { getPages } from '../router/Router';
-import { useState, useEffect, Fragment } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginContainer from '../pages/LoginContainer';
 
-function Header() {
+const Header = () => {
     const pages = getPages();
     const navigate = useNavigate();
-    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-    const [loginDrawer, setLogginDrawer] = useState<boolean>(false);
-    const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-    };
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
+
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
 
-    const toggleDrawer = (open: boolean) => () => {
+    const handleDrawerToggle = (open: boolean) => () => {
         setDrawerOpen(open);
     };
 
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-    const [anchorEl, setAnchorEl] = useState<any>(null);
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
-    const handleClose = () => (setAnchorEl(null));
-    const openDrawer = (e: React.MouseEvent) => {
-        setAnchorEl(e.target);
+    const handleNavigation = (path: string) => {
+        navigate(path.replace(' ', ''));
+        if (drawerOpen) {
+            setDrawerOpen(false);
+        }
     };
 
     return (
         <AppBar position="sticky" sx={{ height: header }}>
             <Toolbar sx={{ justifyContent: 'space-between' }}>
                 <OrderTablePopover />
-                <Button
-                    sx={{ color: 'white' }}
-                    onClick={() => navigate('/')}
-                >
+                <Button sx={{ color: 'white' }} onClick={() => navigate('/')}>
                     <Stack>
                         <Typography
                             variant="h6"
                             noWrap
                             sx={{
                                 mr: 2,
-                                display: { xs: 'flex', md: 'flex' },
                                 fontFamily: 'monospace',
                                 fontWeight: 700,
                                 letterSpacing: '.3rem',
@@ -75,7 +84,6 @@ function Header() {
                             noWrap
                             sx={{
                                 mr: 2,
-                                display: { xs: 'flex', md: 'flex' },
                                 fontFamily: 'monospace',
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
@@ -86,68 +94,78 @@ function Header() {
                         </Typography>
                     </Stack>
                 </Button>
-                {windowWidth > 600 ?
-                    <Fragment>
-                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
-                            {pages.map((page: { path: string }, sakuin: number) => {
-                                return <Button
-                                    key={sakuin}
-                                    onClick={() => navigate(`${page.path.replace(' ', '')}`)}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}
+                {windowWidth > 600 ? (
+                    <>
+                        <Box sx={{ flexGrow: 1 }}>
+                            {pages.map((page, sakuin) => (
+                                <Button
+                                    key={page.path + '' + sakuin}
+                                    onClick={() => handleNavigation(page.path)}
+                                    sx={{ my: 2, color: 'white' }}
                                 >
                                     {page.path.replace('/', '')}
                                 </Button>
-                            })}
-
+                            ))}
                         </Box>
                         <Box>
-                            <IconButton onClick={openDrawer}>
+                            <IconButton onClick={handlePopoverOpen}>
                                 <AccountCircleIcon />
                             </IconButton>
                             <Popover
                                 id={id}
                                 open={open}
                                 anchorEl={anchorEl}
-                                onClose={handleClose}
+                                onClose={handlePopoverClose}
                                 anchorOrigin={{
                                     vertical: 'bottom',
                                     horizontal: 'left',
-                                }}>
+                                }}
+                            >
                                 <LoginContainer />
                             </Popover>
                         </Box>
-                    </Fragment>
-                    :
+                    </>
+                ) : (
                     <IconButton
                         edge="start"
                         color="inherit"
                         aria-label="menu"
                         sx={{ display: { xs: 'flex', md: 'none' } }}
-                        onClick={toggleDrawer(true)}
+                        onClick={handleDrawerToggle(true)}
                     >
                         <MenuIcon />
-                    </IconButton>}
+                    </IconButton>
+                )}
             </Toolbar>
             <Drawer
+                sx={{ '&. MuiDrawer': { justifyContent: 'space-between' } }}
                 anchor="right"
                 open={drawerOpen}
-                onClose={toggleDrawer(false)}
+                onClose={handleDrawerToggle(false)}
             >
-                <List>
-                    {pages.map((page: { path: string }, sakuin: number) => (
-                        <ListItem key={sakuin} onClick={() => {
-                            navigate(`${page.path.replace(' ', '')}`);
-                            toggleDrawer(false)();
-                        }}>
-                            <Typography variant="body1">
-                                {page.path.replace('/', '')}
-                            </Typography>
-                        </ListItem>
-                    ))}
-                </List>
+                <Grid container direction='column' justifyContent={'space-between'} height={'100%'}>
+                    <Grid item>
+                        <List>
+                            {pages.map((page, sakuin) => (
+                                <ListItem
+                                    key={page.path + 'List' + sakuin}
+                                    onClick={() => handleNavigation(page.path)}
+                                >
+                                    <Typography variant="body1">
+                                        {page.path.replace('/', '')}
+                                    </Typography>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Grid>
+                    <Grid item>
+                        <LoginContainer />
+                    </Grid>
+                </Grid>
+
             </Drawer>
-        </AppBar >
+        </AppBar>
     );
-}
+};
 
 export default Header;

@@ -2,9 +2,17 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { auth, getDocumentById } from '../firebase/Calls';
 import { onAuthStateChanged } from "firebase/auth";
 
+interface UserInfo {
+    uid: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+}
+
 interface UserContextType {
     loggedIn: boolean;
-    userInfo: any;
+    userInfo: UserInfo | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -15,18 +23,23 @@ interface UserProviderProps {
 
 export const UserProvider = ({ children }: UserProviderProps) => {
     const [loggedIn, setLogin] = useState<boolean>(false);
-    const [userInfo, setUserInfo] = useState<any>(null);
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                getDocumentById({
-                    collectionName: 'customers',
-                    docId: user.uid
-                }).then((userData: any) => {
+                try {
+                    const userData = await getDocumentById({
+                        collectionName: 'customers',
+                        docId: user.uid
+                    });
                     setLogin(true);
-                    setUserInfo(userData);
-                });
+                    setUserInfo(userData as UserInfo);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    setLogin(false);
+                    setUserInfo(null);
+                }
             } else {
                 setLogin(false);
                 setUserInfo(null);

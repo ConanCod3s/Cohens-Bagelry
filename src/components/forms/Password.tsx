@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, TextField } from '@mui/material';
-import { Fragment } from 'react/jsx-runtime';
+import { FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -8,23 +7,16 @@ interface PasswordFormProps {
     password: string;
     setPassword: (password: string) => void;
     errors: string[];
-    setErrors: (errors: string[]) => void
+    setErrors: (errors: string[]) => void;
 }
 
 const validatePassword = (password: string) => {
     const errors: string[] = [];
 
-    if (password.length < 8)
-        errors.push("Password must be at least 8 characters long.");
-
-    if (!/[A-Z]/.test(password))
-        errors.push("Password must contain at least one uppercase letter.");
-
-    if (!/[a-z]/.test(password))
-        errors.push("Password must contain at least one lowercase letter.");
-
-    if (!/[0-9]/.test(password))
-        errors.push("Password must contain at least one number.");
+    if (password.length < 8) errors.push("Password must be at least 8 characters long.");
+    if (!/[A-Z]/.test(password)) errors.push("Password must contain at least one uppercase letter.");
+    if (!/[a-z]/.test(password)) errors.push("Password must contain at least one lowercase letter.");
+    if (!/[0-9]/.test(password)) errors.push("Password must contain at least one number.");
 
     // if (!/[!@#$%^&*()_+{}\[\]:;"'<>,.?~\\/-]/.test(password))
     //     errors.push("Password must contain at least one special character.");
@@ -74,6 +66,5 @@ export default function PasswordForm({ password, setPassword, errors, setErrors 
                 <FormHelperText>{errors.join(', ')}</FormHelperText>
             )}
         </FormControl>
-
     );
 }

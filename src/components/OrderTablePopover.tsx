@@ -8,30 +8,49 @@ import {
     TableRow,
     Paper,
     Box,
+    Popover,
 } from '@mui/material';
-import { getCollection } from '../services/firebase/Calls';
 import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
-import { Popover } from '@mui/material';
+import { getCollection } from '../services/firebase/Calls';
+
+interface Order {
+    orderId: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    day: string;
+    time: string;
+    selections: { type: string; quantity: number }[];
+}
+
+const isOrder = (data: any): data is Order => {
+    return data && typeof data.orderId === 'string' && Array.isArray(data.selections);
+};
 
 export default function OrderTablePopover() {
-    const [rows, setRows] = useState<[]>([]);
-    const [anchorEl, setAnchorEl] = useState<any>(null);
+    const [rows, setRows] = useState<Order[]>([]);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    const handleClose = () => (setAnchorEl(null));
+    const handleClose = () => setAnchorEl(null);
 
     const getData = async () => {
-        await getCollection('orders').then((res: any) => {
-            setRows(res)
-        });
+        try {
+            const data = await getCollection('orders');
+            // Filter and type guard
+            const validOrders = data.filter(isOrder);
+            setRows(validOrders);
+        } catch (error) {
+            console.error('Failed to fetch orders:', error);
+        }
     };
 
-    const openOrdersMenu = (e: React.MouseEvent) => {
+    const openOrdersMenu = (e: React.MouseEvent<HTMLElement>) => {
         if (e.shiftKey) {
             getData();
-            setAnchorEl(e.target);
+            setAnchorEl(e.currentTarget);
         }
     };
 
@@ -41,9 +60,9 @@ export default function OrderTablePopover() {
                 sx={{
                     display: { xs: 'flex', md: 'flex' },
                     mr: 1,
-                    transform: `rotate(-${Math.floor(Math.random() * 361)}deg)`
+                    transform: `rotate(-${Math.floor(Math.random() * 361)}deg)`,
                 }}
-                onClick={openOrdersMenu}
+                onClick={() => openOrdersMenu}
             />
             <Popover
                 id={id}
@@ -56,7 +75,7 @@ export default function OrderTablePopover() {
                 }}
             >
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={{ minWidth: 650 }} aria-label="order table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Order ID</TableCell>
@@ -65,24 +84,30 @@ export default function OrderTablePopover() {
                                 <TableCell align="right">Phone Number</TableCell>
                                 <TableCell align="right">Date of Pick up</TableCell>
                                 <TableCell align="right">Time of Pick up</TableCell>
+                                <TableCell align="right">Selections</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row: any) => (
-                                <TableRow key={row.orderId}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell component="th" scope="row">{row.orderId}</TableCell>
+                            {rows.map((row) => (
+                                <TableRow
+                                    key={row.orderId}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {row.orderId}
+                                    </TableCell>
                                     <TableCell align="right">{row.firstName}</TableCell>
                                     <TableCell align="right">{row.lastName}</TableCell>
                                     <TableCell align="right">{row.phoneNumber}</TableCell>
                                     <TableCell align="right">{row.day}</TableCell>
                                     <TableCell align="right">{row.time}</TableCell>
-                                    {row.selections.map((sel: any) => {
-                                        return (<span>
-                                            <TableCell >{sel.type}</TableCell>
-                                            <TableCell >{sel.quantity}</TableCell>
-                                        </span>)
-                                    })}
+                                    <TableCell align="right">
+                                        {row.selections.map((sel, index) => (
+                                            <Box key={index}>
+                                                <div>{sel.type}: {sel.quantity}</div>
+                                            </Box>
+                                        ))}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -91,4 +116,4 @@ export default function OrderTablePopover() {
             </Popover>
         </Box>
     );
-};
+}

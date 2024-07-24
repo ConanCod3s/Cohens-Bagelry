@@ -1,9 +1,8 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Box, Button, Stack, TextField } from '@mui/material';
-import { auth, setFireBaseDoc } from '../../services/firebase/Calls';
-
+import { Button, Stack, TextField } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { auth, setFireBaseDoc } from '../../services/firebase/Calls';
 import PhoneNumber from '../forms/PhoneNumber';
 import Email from '../forms/Email';
 import PasswordForm from '../forms/Password';
@@ -11,51 +10,53 @@ import PasswordForm from '../forms/Password';
 export default function SignUpWithEmail() {
     const { enqueueSnackbar } = useSnackbar();
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState<string[]>([]);
-
     const [email, setEmail] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [firstName, setFirstName] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
+    const [errors, setErrors] = useState<string[]>([]);
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
+        if (errors.length > 0 || !email || !password || !firstName || !lastName) {
+            enqueueSnackbar('Please fix errors and fill in all required fields.', { variant: 'warning' });
+            return;
+        }
+
         try {
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((res: any) => {
-                    setFireBaseDoc({
-                        collectionName: 'customers',
-                        docId: res.user.uid,
-                        props: {
-                            uid: res.user.uid,
-                            phoneNumber,
-                            firstName,
-                            lastName,
-                            email,
-                        }
-                    })
-                    enqueueSnackbar('Account Created!', { variant: 'success' });
-                })
-                .catch((error: any) => {
-                    enqueueSnackbar(error.message, { variant: 'error' });
-                });
-        } catch (err: any) { }
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            await setFireBaseDoc({
+                collectionName: 'customers',
+                docId: user.uid,
+                props: {
+                    uid: user.uid,
+                    phoneNumber,
+                    firstName,
+                    lastName,
+                    email,
+                }
+            });
+
+            enqueueSnackbar('Account Created!', { variant: 'success' });
+        } catch (error: any) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
     };
 
     return (
-        <Stack spacing={1}>
+        <Stack spacing={2}>
             <TextField
                 required
-                id="outlined-required"
                 label="First Name"
-                defaultValue=""
-                onChange={(event) => { setFirstName(event.target.value) }}
+                onChange={(event) => setFirstName(event.target.value)}
+                value={firstName}
             />
             <TextField
                 required
-                id="outlined-disabled"
                 label="Last Name"
-                defaultValue=""
-                onChange={(event) => { setLastName(event.target.value) }}
+                onChange={(event) => setLastName(event.target.value)}
+                value={lastName}
             />
             <PhoneNumber setPhoneNumber={setPhoneNumber} />
             <Email setEmail={setEmail} />
@@ -63,11 +64,14 @@ export default function SignUpWithEmail() {
                 password={password}
                 setPassword={setPassword}
                 errors={errors}
-                setErrors={setErrors} />
+                setErrors={setErrors}
+            />
             <Button
                 onClick={handleSignUp}
-                disabled={errors.length !== 0}>Submit</Button>
+                disabled={errors.length > 0 || !email || !password || !firstName || !lastName}
+            >
+                Submit
+            </Button>
         </Stack>
-
-    )
-};
+    );
+}

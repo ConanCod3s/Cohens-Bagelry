@@ -1,39 +1,34 @@
-// Required for side-effects
+// Import necessary Firebase services and functions
 import "firebase/auth";
 import { app } from "./Config";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
-
 import { GoogleAuthProvider, getAuth, signOut } from "firebase/auth";
-
 import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer, getDocs } from "firebase/firestore";
 
-// Initialize Cloud Firestore and get a reference to the service
+// Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 const functions = getFunctions();
 
+// Define callable functions
 export const makeRoleForUser = httpsCallable(functions, "makeRoleForUser");
 export const updateUserProfile = httpsCallable(functions, "updateUserProfile");
+export const createUserDocument = httpsCallable(functions, "createUserDocument");
 
-export const createUserDocument = httpsCallable(
-    functions,
-    "createUserDocument"
-);
+// Initialize global variables
+export const staff: any[] = [];
+export const users: any[] = [];
+export const events: any[] = [];
+export const athletes: any[] = [];
+export const downloadedItems: any[] = [];
+export let appImages: string[] = [];
 
-// Store values
-export const staff = [];
-export const users = [];
-export const events = [];
-export const athletes = [];
-export const downloadedItems = [];
-
-export let appImages: any[] = [];
-
+// Fetch application images
 export const getAppImages = async () => {
-    const promises = [
+    const urls = [
         "gs://cohens-bagelry-8c701.appspot.com/Step_1.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_2.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_3.jpg",
@@ -45,14 +40,14 @@ export const getAppImages = async () => {
         "gs://cohens-bagelry-8c701.appspot.com/Step_7.2.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_8.1.jpg",
         "gs://cohens-bagelry-8c701.appspot.com/Step_8.2.jpg",
-    ].map((url) => getURL(url));
+    ];
 
-    const results: any = await Promise.all(promises);
-
-    appImages = results;
+    const promises = urls.map(getURL);
+    appImages = await Promise.all(promises);
 }
 
-export async function signUserOut() {
+// Sign out the current user
+export const signUserOut = async () => {
     try {
         await signOut(auth);
     } catch (error) {
@@ -60,67 +55,72 @@ export async function signUserOut() {
     }
 };
 
-export async function getURL(imgPath: string) {
-    let downloadedItem = "";
-
+// Get the download URL for a given image path
+export const getURL = async (imgPath: string): Promise<string> => {
     const storageRef = ref(storage, imgPath);
 
-    await getDownloadURL(storageRef)
-        .then((url) => {
-            downloadedItem = url;
-            return;
-        })
-        .catch((error: object) => {
-            console.error('getURL: ', error)
-            return "";
-        });
-    return downloadedItem;
-}
-
-export async function setFireBaseDoc({ collectionName, docId, props }: any) {
-    /**If we dont send an id than we should create a new doc and generate one */
-    if (docId === undefined || docId === null) {
-        const newref = doc(collection(db, collectionName));
-        props = collectionName === "customers" ? { uid: newref.id, ...props } : props;
-        setDoc(newref, props);
-    } else {
-        setDoc(doc(db, collectionName, docId), props);
+    try {
+        return await getDownloadURL(storageRef);
+    } catch (error) {
+        console.error('Error getting download URL:', error);
+        return "";
     }
 }
 
-/**
- * Retrieves a document from Firestore by its ID.
- * @param {string} collectionName - The name of the collection.
- * @param {string} docId - The ID of the document to retrieve.
- * @returns {Promise<object>} - A promise that resolves to the document data.
- */
+// Set or update a document in Firestore
+export const setFireBaseDoc = async ({ collectionName, docId, props }: {
+    collectionName: string,
+    docId?: string,
+    props: any
+}) => {
+    try {
+        if (!docId) {
+            const newRef = doc(collection(db, collectionName));
+            const data = collectionName === "customers" ? { uid: newRef.id, ...props } : props;
+            await setDoc(newRef, data);
+        } else {
+            await setDoc(doc(db, collectionName, docId), props);
+        }
+    } catch (error) {
+        console.error('Error setting document:', error);
+    }
+}
 
-export async function getDocumentById({ collectionName, docId }: {
+// Get a document from Firestore by its ID
+export const getDocumentById = async ({ collectionName, docId }: {
     collectionName: string,
     docId: string
-}) {
+}) => {
     try {
         const docRef = doc(db, collectionName, docId);
         const docSnap = await getDoc(docRef);
         return docSnap.data();
     } catch (error) {
-        console.error("Error getting document:", error);
+        console.error('Error getting document:', error);
         throw error;
     }
 }
 
-export async function getCount(collectionName: string) {
-    const count = await getCountFromServer(collection(db, collectionName)).then((res) => {
-        return res.data().count;
-    });
-    return count;
+// Get the count of documents in a collection
+export const getCount = async (collectionName: string) => {
+    try {
+        const countSnapshot = await getCountFromServer(collection(db, collectionName));
+        return countSnapshot.data().count;
+    } catch (error) {
+        console.error('Error getting document count:', error);
+        return 0;
+    }
 }
 
-export async function getCollection(collectionName: string) {
-    const docRef = collection(db, collectionName);
-    const snap = await getDocs(docRef);
-    const res = snap.docs.map(doc => doc.data());
-    return res;
+// Retrieve all documents from a collection
+export const getCollection = async (collectionName: string) => {
+    try {
+        const snapshot = await getDocs(collection(db, collectionName));
+        return snapshot.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error('Error getting collection:', error);
+        return [];
+    }
 }
 
-export { auth, db, googleProvider, storage }; 
+export { auth, db, googleProvider, storage };
