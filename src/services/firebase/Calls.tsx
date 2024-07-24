@@ -55,8 +55,6 @@ export const getAppImages = async () => {
 export async function signUserOut() {
     try {
         await signOut(auth);
-        console.log('User has been logged out');
-        window.location.href = '/';
     } catch (error) {
         console.error('Error signing out:', error);
     }

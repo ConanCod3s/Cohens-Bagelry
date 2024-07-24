@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Button, Stack, TextField } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import Email from '../forms/Email';
 import { auth } from '../../services/firebase/Calls';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
+import PasswordForm from '../forms/Password';
 
 export default function LoginWithEmail() {
     const navigate = useNavigate();
@@ -29,14 +30,11 @@ export default function LoginWithEmail() {
     return (
         <Stack spacing={1}>
             <Email setEmail={setEmail} />
-            <TextField
-                required
-                id="outlined-disabled"
-                label="Password"
-                defaultValue=""
-                type="password"
-                onChange={(event) => setPassword(event.target.value)}
-            />
+            <PasswordForm
+                password={password}
+                setPassword={setPassword}
+                errors={[]}
+                setErrors={() => { }} />
             <Button onClick={handleLogin}>Submit</Button>
         </Stack>
 

@@ -1,5 +1,5 @@
 import Header from "./components/Header.tsx";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { lightTheme, darkTheme, workingWindow } from "./theme/Base.tsx";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,7 +8,7 @@ import Footer from "./components/Footer.tsx";
 
 import { useUser } from './services/providers/User.tsx';
 import LoginContainer from "./pages/LoginContainer.tsx";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import Pictures from "./pages/Pictures.tsx";
 
 export default function App() {
@@ -22,18 +22,15 @@ export default function App() {
             <Box sx={{ height: workingWindow, overflow: 'auto', padding: 1 }}>
                 {loggedIn ?
                     <Outlet /> :
-                    <Container>
-                        <Box sx={(theme) => ({
+                    <Fragment>
+                        <Box sx={() => ({
                             position: 'sticky',
                             top: 0,
-                            backgroundColor: theme.palette.primary.main
                         })}>
                             <LoginContainer />
                         </Box>
-                        <Box>
-                            <Pictures />
-                        </Box>
-                    </Container>}
+                        <Pictures />
+                    </Fragment>}
             </Box>
             <Footer themeMode={themeMode} swapTheme={swapTheme} />
         </ThemeProvider>
