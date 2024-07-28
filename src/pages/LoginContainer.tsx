@@ -25,7 +25,6 @@ export default function LoginContainer() {
         }
     };
 
-
     const render = loginContainerShowing && (
         <Fragment>
             <Grid container direction={'row'}>
