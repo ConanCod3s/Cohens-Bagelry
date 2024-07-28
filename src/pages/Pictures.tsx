@@ -27,7 +27,7 @@ export default function Pictures() {
     if (isLoading) return <CircularProgress sx={{ display: 'block', margin: 'auto' }} />;
 
     return (
-        <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2} sx={{ padding: 1 }}>
+        <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1} >
             {appImages.map((image, index) => (
                 <CardMedia
                     key={index}

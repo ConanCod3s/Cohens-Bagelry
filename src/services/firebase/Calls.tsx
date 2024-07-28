@@ -10,10 +10,11 @@ import { getFirestore, collection, setDoc, doc, getDoc, getCountFromServer, getD
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-const googleProvider = new GoogleAuthProvider();
 const functions = getFunctions();
+const googleProvider = new GoogleAuthProvider();
 
 // Define callable functions
+export const sendOrderEmail = httpsCallable(functions, "sendOrderEmail");
 export const makeRoleForUser = httpsCallable(functions, "makeRoleForUser");
 export const updateUserProfile = httpsCallable(functions, "updateUserProfile");
 export const createUserDocument = httpsCallable(functions, "createUserDocument");
@@ -122,5 +123,30 @@ export const getCollection = async (collectionName: string) => {
         return [];
     }
 }
+
+// Your existing order placement function
+export const placeOrder = async (orderDetails: any) => {
+    try {
+        // Save order to Firestore
+        await setFireBaseDoc({
+            collectionName: "orders",
+            props: orderDetails
+        });
+
+        // Prepare email details
+        const emailData = {
+            subject: "Order Confirmation",
+            body: `Thank you for your order, ${orderDetails.firstName}!`,
+            recipient: orderDetails.email
+        };
+
+        // Call the sendOrderEmail function
+        await sendOrderEmail(emailData);
+
+        console.log("Order placed and email sent successfully.");
+    } catch (error) {
+        console.error("Error placing order or sending email:", error);
+    }
+};
 
 export { auth, db, googleProvider, storage };

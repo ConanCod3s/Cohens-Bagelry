@@ -23,9 +23,7 @@ export default function App() {
                     <Outlet />
                 ) : (
                     <Fragment>
-                        <Box sx={{ position: 'sticky', top: 0 }}>
-                            <LoginContainer />
-                        </Box>
+                        <LoginContainer />
                         <Pictures />
                     </Fragment>
                 )}
