@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Box, Button, Container, Grid, IconButton, Stack, Switch, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Stack, Switch, Typography } from "@mui/material";
 import LoginWithEmail from "../components/login/LoginWithEmail";
 import SignUpWithEmail from "../components/signUp/SignUpWithEmail";
 import { useUser } from '../services/providers/User';
