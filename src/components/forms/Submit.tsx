@@ -64,6 +64,7 @@ export default function Submit({
                     orderId: `W-${(count + 1).toString().padStart(4, '0')}`,
                     day,
                     time,
+                    email,
                     selections: selections.map(obj => ({
                         quantity: obj.quantity,
                         type: obj.label,
