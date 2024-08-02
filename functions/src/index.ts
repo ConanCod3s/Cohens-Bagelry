@@ -3,6 +3,8 @@ import * as admin from "firebase-admin";
 import * as nodemailer from "nodemailer";
 import { OAuth2Client } from "google-auth-library";
 
+import { onCall } from 'firebase-functions/v2/https';
+
 // Initialize Firebase Admin SDK
 admin.initializeApp();
 
@@ -50,7 +52,7 @@ export const sendOrderEmail = functions.firestore
 
     try {
       const result = await sendMail(email, subject, body, "");
-      console.log("Email sent: " + result.response);
+      console.log("Email sent: " + result);
     } catch (error) {
       console.error("Error sending email: ", error);
     }
@@ -58,38 +60,52 @@ export const sendOrderEmail = functions.firestore
     return null;
   });
 
+
 async function sendMail(
   to: string,
   subject: string,
   text: string,
   html: string
 ) {
-  try {
-    const accessToken = await oAuth2Client.getAccessToken();
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: functions.config().gmail.email,
-        clientId: functions.config().gmail.client_id,
-        clientSecret: functions.config().gmail.client_secret,
-        refreshToken: functions.config().gmail.refresh_token,
-        accessToken: accessToken.token || "",
-      },
-    });
-
-    const mailOptions = {
-      from: functions.config().gmail.email,
-      to,
-      subject,
-      text,
-      html,
-    };
-
-    const result = await transporter.sendMail(mailOptions);
-    return result;
-  } catch (error) {
-    throw new Error(`Error sending email: ${error}`);
-  }
 }
+
+
+export const sendEmail = onCall(
+  {
+    enforceAppCheck: true, // Reject requests with missing or invalid App Check tokens.
+  },
+  async (request: any) => {
+    // Extract parameters from the request
+    const { to, subject, text, html } = request.data;
+
+    try {
+      const accessToken = await oAuth2Client.getAccessToken();
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: functions.config().gmail.email,
+          clientId: functions.config().gmail.client_id,
+          clientSecret: functions.config().gmail.client_secret,
+          refreshToken: functions.config().gmail.refresh_token,
+          accessToken: accessToken.token || "",
+        },
+      });
+
+      const mailOptions = {
+        from: functions.config().gmail.email,
+        to,
+        subject,
+        text,
+        html,
+      };
+
+      const result = await transporter.sendMail(mailOptions);
+      return result;
+    } catch (error) {
+      throw new Error(`Error sending email: ${error}`);
+    }
+  }
+);

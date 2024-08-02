@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 
+oauth2-script
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

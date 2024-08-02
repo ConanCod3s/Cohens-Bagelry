@@ -1,11 +1,11 @@
-const { functions } = require("firebase-functions");
 const { OAuth2Client } = require("google-auth-library");
 const readline = require("readline");
 
-// Initialize the OAuth2 client
-const CLIENT_ID = functions.config().gmail.client_id;
-const CLIENT_SECRET = functions.config().gmail.client_secret;
-const REDIRECT_URI = functions.config().gmail.redirect_uri;
+// Replace these with your actual values
+const CLIENT_ID = "460392213023-g2h8vh6k1r72trrta1bm0q7pf3ihqu8g.apps.googleusercontent.com";
+const CLIENT_SECRET = "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";
+const REDIRECT_URI = "www.cohensbagelry.com";
+
 const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
 // Generate a URL for obtaining user consent
@@ -32,11 +32,8 @@ rl.question("Enter the code from that page here: ", async (code) => {
   try {
     // Get the tokens from the authorization code
     const { tokens } = await oAuth2Client.getToken(code);
-    console.log("Access Token:", tokens.access_token);
-    console.log("Refresh Token:", tokens.refresh_token);
     rl.close();
   } catch (error) {
-    console.error("Error retrieving access token:", error);
     rl.close();
   }
 });
