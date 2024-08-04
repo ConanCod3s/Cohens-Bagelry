@@ -3,7 +3,7 @@ const readline = require("readline");
 
 // Replace these with your actual values
 const CLIENT_ID = "1003087423917-7rbc9p7trshem44fu49nbg7m7b01qiog.apps.googleusercontent.com";
-const CLIENT_SECRET = "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";
+const CLIENT_SECRET = "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";
 const REDIRECT_URI = "https://cohensbagelry.com";
 
 const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
