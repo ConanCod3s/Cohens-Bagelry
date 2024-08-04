@@ -13,7 +13,7 @@ dist-ssr
 *.local
 .env
 
-oauth2-script
+oauth2-script*
 
 # Editor directories and files
 .vscode/*
