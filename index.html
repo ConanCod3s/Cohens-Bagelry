@@ -2,6 +2,12 @@
 <html lang="en">
 
 <head>
+
+
+  <!-- reCaptcha -->
+  <script async src="https://www.google.com/recaptcha/api.js?render=6LczvB0qAAAAAL0fmB_SF-ThIHRkBwGjDSo_GqsI"></script>
+  <!-- End reCaptcha  -->
+
   <!-- Google Tag Manager -->
   <script>
     (function (w, d, s, l, i) {
@@ -16,18 +22,7 @@
     })(window, document, "script", "dataLayer", "GTM-K2J23LBV");
   </script>
   <!-- End Google Tag Manager -->
-  <!-- 6LfRuh0qAAAAAIq5Y40pQsPqlpJVxlpYtrhydqgq -->
-  <script>
-    function onClick(e) {
-      e.preventDefault();
-      grecaptcha.enterprise.ready(async () => {
-        const token = await grecaptcha.enterprise.execute(
-          "6LclRQoqAAAAAJMAtg1AQJVk1MlP6jdTyt4peTnD",
-          { action: "LOGIN" }
-        );
-      });
-    }
-  </script>
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
