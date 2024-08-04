@@ -1,6 +1,10 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import * as nodemailer from "nodemailer";
 import { OAuth2Client } from "google-auth-library";
+
+// Initialize Firebase Admin SDK
+admin.initializeApp();
 
 // Initialize OAuth2Client with your credentials
 const oAuth2Client = new OAuth2Client(
@@ -13,6 +17,48 @@ const oAuth2Client = new OAuth2Client(
 oAuth2Client.setCredentials({
   refresh_token: functions.config().gmail.refresh_token,
 });
+
+// Firestore trigger function
+export const sendOrderEmail = functions.firestore
+  .document("orders/{orderId}")
+  .onWrite(async (change, context) => {
+    console.log("Function triggered");
+
+    if (!change.after.exists) {
+      console.log("Document deleted");
+      return null;
+    }
+
+    const orderData = change.after.data();
+    console.log(orderData);
+
+    if (!orderData) {
+      console.log("No data found in the document");
+      return null;
+    }
+
+    const email = orderData.email;
+    const firstName = orderData.firstName;
+
+    if (!email || !firstName) {
+      console.log("Missing email or first name in order data");
+      return null;
+    }
+
+    const subject = "Order Confirmation";
+    const body = `Thank you for your order, ${firstName}! Your order details: ${JSON.stringify(
+      orderData
+    )}`;
+
+    try {
+      const result = await sendMail(email, subject, body, "");
+      console.log("Email sent: " + result.response);
+    } catch (error) {
+      console.error("Error sending email: ", error);
+    }
+
+    return null;
+  });
 
 async function sendMail(
   to: string,
@@ -49,20 +95,3 @@ async function sendMail(
     throw new Error(`Error sending email: ${error}`);
   }
 }
-
-export const sendEmail = functions.https.onRequest(
-  async (request, response) => {
-    try {
-      const result = await sendMail(
-        request.body.to,
-        request.body.subject,
-        request.body.text,
-        request.body.html
-      );
-      response.status(200).send("Email sent: " + result.response);
-    } catch (error) {
-      console.error(error);
-      response.status(500).send("Error sending email");
-    }
-  }
-);

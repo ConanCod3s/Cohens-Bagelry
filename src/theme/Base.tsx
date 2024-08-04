@@ -2,7 +2,9 @@ import { createTheme, ThemeOptions } from "@mui/material";
 
 // Buffers for static components, all in vh
 export const header: number = 80;
-export const footer: number = 40;
+// Temporarly make this 0 for recaptcha stuff
+export const footer: number = 0;
+// export const footer: number = 40;
 export const workingWindow: number = window.innerHeight - (header + footer);
 
 // Common typography settings

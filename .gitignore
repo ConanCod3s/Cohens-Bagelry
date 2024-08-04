@@ -11,7 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
+.envg
+
+# Directories
+oauth2-script/
 
 # Editor directories and files
 .vscode/*
